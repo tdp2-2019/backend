@@ -8,6 +8,9 @@ app.get('/ping', (req, res) => {
   })
 });
 
+require('./src/controllers/trips')(app);
+require('./src/controllers/users')(app);
+
 const PORT = 5000;
 
 app.listen(PORT, () => {
