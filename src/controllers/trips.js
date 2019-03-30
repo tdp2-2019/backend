@@ -2,25 +2,25 @@ var trips_dao = require('../dao/trips_dao')
 
 trips = function(app){
   
-  app.get('/trips', (req, res) => {
+  app.get('/trips', (req, res, err) => {
     res.status(200).send({
       trips: trips_dao.get_all()
     });
   });
   
-  app.get('/trips/:id', (req, res) => {
+  app.get('/trips/:id', (req, res, err) => {
     res.status(200).send({
       trips: trips_dao.get(req.params.id)
     });
   });
   
-  app.post('/trips/', (req, res) => {
+  app.post('/trips', (req, res, err) => {
     res.status(201).send({
       trips: trips_dao.create(req.body)
     });
   });
   
-  app.put('/trips/:id', (req, res) => {
+  app.put('/trips/:id', (req, res, err) => {
     res.status(202).send({
       trips: trips_dao.update(req.params.id)
     });
