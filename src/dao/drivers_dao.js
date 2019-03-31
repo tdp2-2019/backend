@@ -50,4 +50,9 @@ var drivers_dao = module.exports = {
     return drivers;
   },
 
+  delete: function(id){
+   var eliminado = drivers.splice(id - 1,1);
+   return eliminado.length>0?"OK: se elimino el elemento "+JSON.stringify(eliminado):"Error: elemento no encontrado.";
+  },
+
 }

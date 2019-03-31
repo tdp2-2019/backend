@@ -27,6 +27,12 @@ drivers = function(app){
     });
   });
 
+  app.delete('/drivers/:id', (req, res, err) => {
+    res.status(202).send({
+      status: drivers_dao.delete(req.params.id)
+    });
+  });
+
 }
 
 module.exports = drivers;

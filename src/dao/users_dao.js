@@ -43,4 +43,9 @@ var users_dao = module.exports = {
     return users;
   },
 
+  delete: function(id){
+   var eliminado = users.splice(id - 1,1);
+   return eliminado.length>0?"OK: se elimino el elemento "+JSON.stringify(eliminado):"Error: elemento no encontrado.";
+  },
+
 }

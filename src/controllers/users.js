@@ -26,6 +26,11 @@ users = function(app){
     });
   });
 
+  app.delete('/users/:id', (req, res, err) => {
+    res.status(202).send({
+      status: users_dao.delete(req.params.id)
+    });
+  });
 }
 
 module.exports = users;
