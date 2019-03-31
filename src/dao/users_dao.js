@@ -12,7 +12,21 @@ var users_dao = module.exports = {
   },
   
   update: function(body) {
-    
+    var response="error";
+    users.forEach(user => {
+      if (user.id == id) {
+        user.DNI = body.DNI ? body.DNI : user.DNI;
+        user.name = body.name ? body.name : user.name;
+        user.lastName = body.lastName ? body.lastName : user.lastName;
+        user.userName = body.userName ? body.userName : user.userName;
+        user.email = body.email ? body.email : user.email;
+        user.telephone = body.telephone ? body.telephone : user.telephone;
+        user.celphone = body.celphone ? body.celphone : user.celphone;
+        user.address = body.address ? body.address : user.address;
+        response = "OK";
+      }
+    });
+    return response;
   },
   
   get: function(id) {

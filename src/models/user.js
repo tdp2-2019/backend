@@ -78,6 +78,20 @@ class User {
     this._address = $address;
   }
 
+  toJSON(){
+        return {
+            id: this.id,
+            DNI: this.DNI,
+            name: this.name,
+            lastName : this.lastName,
+            userName :this.userName,
+            email :this.email,
+            telephone : this.telephone,
+            celphone : this.celphone,
+            address : this.address
+        };
+    }
+
 }
 
 module.exports = User;

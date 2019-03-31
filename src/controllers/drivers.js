@@ -1,7 +1,7 @@
 var drivers_dao = require('../dao/drivers_dao')
 
 drivers = function(app){
-  
+
   app.get('/drivers', (req, res) => {
      res.status(200).send({
       drivers: JSON.stringify(drivers_dao.get_all())
@@ -17,7 +17,7 @@ drivers = function(app){
   
   app.post('/drivers', (req, res, err) => {
     res.status(201).send({
-      drivers: drivers_dao.create(req.body)
+      driver: JSON.stringify(drivers_dao.create(req.body))
     });
   });
   

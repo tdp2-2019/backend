@@ -28,7 +28,7 @@ class Driver {
 		this._id = new_id;
 	}
 
-	set DNI(	DNI) {
+	set DNI(DNI) {
 		this._DNI = DNI;
 	}
 
@@ -50,6 +50,16 @@ class Driver {
 
 	set lastName(lastName) {
 		this._lastName = lastName;
+	}
+
+	get userName()
+	{
+	    return this._userName;
+	}
+	
+	set userName(userName)
+	{
+	    this._userName = userName;
 	}
 
 	get email() {
@@ -150,13 +160,20 @@ class Driver {
         return {
             id: this.id,
             DNI: this.DNI,
-            name: this.name
+            name: this.name,
+            lastName : this.lastName,
+            userName :this.userName,
+            email :this.email,
+            telephone : this.telephone,
+            celphone : this.celphone,
+            address : this.address,
+            brand : this.brand,
+            model: this.model,
+            licenseNumber : this.licenseNumber,
+            insurancePolicyNumber :this. insurancePolicyNumber,
+            startWorkTime : this.startWorkTime,
+            endWorkTime : this.endWorkTime
         };
     }
-
-    static fromJSON(obj) {
-        return new this(obj);
-    }
-
 }
 module.exports = Driver;
