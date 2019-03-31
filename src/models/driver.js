@@ -83,7 +83,7 @@ class Driver {
 
 	set address(address)
 	{
-		this._address = $address;
+		this._address = address;
 	}
 
 	get brand()
@@ -93,7 +93,7 @@ class Driver {
 
 	set brand(brand)
 	{
-		this._brand = $brand;
+		this._brand = brand;
 	}
 
 	get model()
@@ -103,7 +103,7 @@ class Driver {
 
 	set model(model)
 	{
-		this._model = $model;
+		this._model = model;
 	}
 
 	get licenceNumber()
@@ -113,7 +113,7 @@ class Driver {
 
 	set licenceNumber(licenceNumber)
 	{
-		this._licenceNumber = $licenceNumber;
+		this._licenceNumber = licenceNumber;
 	}
 
 	get insurancePolicyNumber()
@@ -123,7 +123,7 @@ class Driver {
 
 	set insurancePolicyNumber(insurancePolicyNumber)
 	{
-		this._insurancePolicyNumber = $insurancePolicyNumber;
+		this._insurancePolicyNumber = insurancePolicyNumber;
 	}
 
 	get startWorkTime()
@@ -133,7 +133,7 @@ class Driver {
 
 	set startWorkTime(startWorkTime)
 	{
-		this._startWorkTime = $startWorkTime;
+		this._startWorkTime = startWorkTime;
 	}
 
 	get endWorkTime()
@@ -143,8 +143,20 @@ class Driver {
 
 	set endWorkTime(endWorkTime)
 	{
-		this._endWorkTime = $endWorkTime;
+		this._endWorkTime = endWorkTime;
 	}
+
+	toJSON(){
+        return {
+            id: this.id,
+            DNI: this.DNI,
+            name: this.name
+        };
+    }
+
+    static fromJSON(obj) {
+        return new this(obj);
+    }
 
 }
 module.exports = Driver;

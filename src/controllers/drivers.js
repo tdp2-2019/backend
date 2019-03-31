@@ -4,14 +4,14 @@ drivers = function(app){
   
   app.get('/drivers', (req, res) => {
      res.status(200).send({
-      drivers: drivers_dao.get_all()
-    });
+      drivers: JSON.stringify(drivers_dao.get_all())
+    	});
   });
   
-    
+
   app.get('/drivers/:id', (req, res, err) => {
     res.status(200).send({
-      drivers: drivers_dao.get(req.params.id)
+      driver: JSON.stringify(drivers_dao.get(req.params.id))
     });
   });
   
@@ -23,7 +23,7 @@ drivers = function(app){
   
   app.put('/drivers/:id', (req, res, err) => {
     res.status(202).send({
-      drivers: drivers_dao.update(req.params.id)
+      status: drivers_dao.update(req.params.id,req.body)
     });
   });
 

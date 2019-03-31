@@ -12,8 +12,28 @@ var drivers_dao = module.exports = {
     return driver;
   },
   
-  update: function(body) {
-    
+  update: function(id,body) {
+    var response="error";
+    drivers.forEach(driver => {
+      if (driver.id == id) {
+        driver.DNI = body.DNI ? body.DNI : driver.DNI;
+        driver.name = body.name ? body.name : driver.name;
+        driver.lastName = body.lastName ? body.lastName : driver.lastName;
+        driver.userName = body.userName ? body.userName : driver.userName;
+        driver.email = body.email ? body.email : driver.email;
+        driver.telephone = body.telephone ? body.telephone : driver.telephone;
+        driver.celphone = body.celphone ? body.celphone : driver.celphone;
+        driver.address = body.address ? body.address : driver.address;
+        driver.brand = body.brand ? body.brand : driver.brand;
+        driver.model = body.model ? body.model : driver.model;
+        driver.licenseNumber = body.licenseNumber ? body.licenseNumber : driver.licenseNumber;
+        driver.insurancePolicyNumber = body.insurancePolicyNumber ? body.insurancePolicyNumber : driver.insurancePolicyNumber;
+        driver.startWorkTime = body.startWorkTime ? body.startWorkTime : driver.startWorkTime;
+        driver.endWorkTime = body.endWorkTime ? body.endWorkTime : driver.endWorkTime;
+        response = "OK";
+      }
+    });
+    return response;
   },
   
   get: function(id) {
