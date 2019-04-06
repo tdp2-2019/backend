@@ -10,6 +10,7 @@ class Trip {
     this._pets = pets;
     this._driver_rating = {}
     this._client_rating = {}
+    this._status = 'created'
   }
   
   get id() {
@@ -54,6 +55,14 @@ class Trip {
   
   set client_rating_comment(comment) {
     this._client_rating.comment = comment;
+  }
+  
+  get status() {
+    return this._status;
+  }
+  
+  set status(status) {
+    this._status = status;
   }
   
   set driver_rating_comment(comment) {
