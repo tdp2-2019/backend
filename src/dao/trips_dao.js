@@ -8,7 +8,11 @@ var trips_dao = module.exports = {
   
   create : function(body) {
     var id = trips.length + 1;
-    return this.get_waypoints().then(response => {
+    var source_lat = body.source.lat;
+    var source_long = body.source.long;
+    var destination_lat = body.destination.lat;
+    var destination_long = body.destination.long;
+    return this.get_waypoints(source_lat, source_long, destination_lat, destination_long).then(response => {
       var trip = new Trip(id, body.client, body.driver, body.source, body.destination, body.start_time, body.pets);
       trip._points = response.points;
       trip._duration = response.duration;
@@ -41,10 +45,10 @@ var trips_dao = module.exports = {
     return json_trips;
   },
   
-  get_waypoints: function() {
+  get_waypoints: function(source_lat, source_long, destination_lat, destination_long) {
     return new Promise(resolve => {
-      var origin = '-34.570804' + ',' + '-58.433385';
-      var destination = '-34.551718' + ',' + '-58.451990';
+      var origin = source_lat + ',' + source_long;
+      var destination = destination_lat + ',' + destination_long;
       var points = [];
       var response = {
         points: [],

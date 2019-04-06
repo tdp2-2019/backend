@@ -1,13 +1,11 @@
 class Trip {
   
-  constructor(id, client, driver, source, destination, start_time, end_time, pets) {
+  constructor(id, client, source, destination, start_time, pets) {
     this._id = id;
     this._client = client;
-    this._driver = driver;
     this._source = source;
     this._destination = destination;
     this._start_time = Date.now();
-    this._end_time = end_time;
     this._current_position = source;
     this._pets = pets;
     this._driver_rating = {}
