@@ -10,13 +10,15 @@ trips = function(app){
   
   app.get('/trips/:id', (req, res, err) => {
     res.status(200).send({
-      trips: trips_dao.get(req.params.id)
+      trips: trips_dao.get(req.params.id).to_json()
     });
   });
   
   app.post('/trips', (req, res, err) => {
-    res.status(201).send({
-      trips: trips_dao.create(req.body)
+    trips_dao.create(req.body).then(trip => {
+      res.status(201).send({
+        trip: trip.to_json()
+      });
     });
   });
   

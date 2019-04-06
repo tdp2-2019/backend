@@ -18,6 +18,8 @@
   "homepage": "https://github.com/tdp2-2019/backend#readme",
   "dependencies": {
     "body-parser": "^1.18.3",
-    "express": "^4.16.4"
+    "express": "^4.16.4",
+    "polyline-encoded": "0.0.8",
+    "request": "^2.88.0"
   }
 }
