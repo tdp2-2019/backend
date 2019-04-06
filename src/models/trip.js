@@ -6,6 +6,9 @@ class Trip {
     this._source = source;
     this._destination = destination;
     this._start_time = Date.now();
+    this._end_time = null;
+    this._driver_id = null;
+    this._rejecteds = [];
     this._current_position = source;
     this._pets = pets;
     this._driver_rating = {}
@@ -97,10 +100,33 @@ class Trip {
       pets: this._pets,
       price: this._price,
       driver_rating: this._driver_rating,
-      client_rating: this._client_rating
+      client_rating: this._client_rating,
+      driver_id : this._driver_id,
+      start_time : this._start_time,
+      end_time: this._end_time
     }
   }
+
+  get end_time()
+  {
+      return this._end_time;
+  }
   
+  set end_time(end_time)
+  {
+      this._end_time = end_time;
+  }
+  
+  get driver_id()
+  {
+      return this._driver_id;
+  }
+  
+  set driver_id(driver_id)
+  {
+      this._driver_id = driver_id;
+  }
+
 }
 
 module.exports = Trip;

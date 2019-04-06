@@ -11,7 +11,7 @@ var users_dao = module.exports = {
     return user;
   },
   
-  update: function(body) {
+  update: function(id,body) {
     var response="error";
     users.forEach(user => {
       if (user.id == id) {
