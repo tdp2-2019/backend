@@ -24,7 +24,7 @@ trips = function(app){
   
   app.put('/trips/:id', (req, res, err) => {
     res.status(202).send({
-      trips: trips_dao.update(req.params.id)
+      trips: trips_dao.update(req.params.id,req.body)
     });
   });
   
