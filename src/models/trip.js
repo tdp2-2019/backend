@@ -28,11 +28,6 @@ class Trip {
   {
       return this._rejecteds;
   }
-  
-  set rejecteds(rejection)
-  {
-      this._rejecteds.push(rejection);
-  }
 
   set current_position(position) {
     this._current_position = position;

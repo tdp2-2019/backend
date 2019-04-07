@@ -4,19 +4,19 @@ users = function(app){
   
   app.get('/users', (req, res) => {
      res.status(200).send({
-      users: JSON.stringify(users_dao.get_all())
+      users: users_dao.get_all()
     });
   });
   
   app.get('/users/:id', (req, res, err) => {
     res.status(200).send({
-      user: JSON.stringify(users_dao.get(req.params.id))
+      user: users_dao.get(req.params.id)
     });
   });
   
   app.post('/users', (req, res, err) => {
     res.status(201).send({
-      user: JSON.stringify(users_dao.create(req.body))
+      user: users_dao.create(req.body)
     });
   });
   
