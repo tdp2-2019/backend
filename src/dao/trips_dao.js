@@ -27,13 +27,13 @@ var trips_dao = module.exports = {
     trips.forEach(trip => {
       if (trip.id == id) {
         trip.client = body.client ? body.client : trip.client;
-        //trip.source = body.source ? body.source : trip.source;
         trip.destination = body.destination ? body.destination : trip.destination;
         trip.start_time = body.start_time ? body.start_time : trip.start_time;
         trip.end_time = body.end_time ? body.end_time : trip.end_time;
         trip.driver_id = body.driver_id ? body.driver_id : trip.driver_id;
         trip.current_position = body.current_position ? body.current_position : trip.current_position;
         trip.status = body.status ? body.status : trip.status;
+        if(body.rejection) trip.rejecteds.push(body.rejection);
         response = "OK";
       }
     });

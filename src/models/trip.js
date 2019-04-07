@@ -24,6 +24,16 @@ class Trip {
     this._id = new_id;
   }
   
+  get rejecteds()
+  {
+      return this._rejecteds;
+  }
+  
+  set rejecteds(rejection)
+  {
+      this._rejecteds.push(rejection);
+  }
+
   set current_position(position) {
     this._current_position = position;
   }
@@ -103,7 +113,8 @@ class Trip {
       client_rating: this._client_rating,
       driver_id : this._driver_id,
       start_time : this._start_time,
-      end_time: this._end_time
+      end_time: this._end_time,
+      rejecteds: this._rejecteds
     }
   }
 
