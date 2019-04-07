@@ -17,7 +17,7 @@ trips = function(app){
   app.post('/trips', (req, res, err) => {
     trips_dao.create(req.body).then(trip => {
       res.status(201).send({
-        trip: trip.to_json()
+        trip: trip
       });
     });
   });
