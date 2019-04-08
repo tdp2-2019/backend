@@ -109,7 +109,8 @@ class Trip {
       driver_id : this._driver_id,
       start_time : this._start_time,
       end_time: this._end_time,
-      rejecteds: this._rejecteds
+      rejecteds: this._rejecteds,
+      status: this._status
     }
   }
 
