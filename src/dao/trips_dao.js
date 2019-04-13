@@ -23,7 +23,7 @@ var trips_dao = module.exports = {
   },
   
   update: function(body) {
-    
+     
   },
   
   get: function(id) {

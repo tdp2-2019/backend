@@ -20,3 +20,20 @@ const PORT = 5000;
 app.listen(PORT, () => {
   console.log(`server running on port ${PORT}`)
 });
+
+
+app.use(function(req, res, next) {
+  var err = new Error('Page Not Found');
+  err.status = 404;
+  next(err);
+});
+
+
+app.use(function(err, req, res, next) {
+  res.status(err.status || 500)
+  .json({
+    errorCode: 1,
+    message: err.message
+  });
+});
+
