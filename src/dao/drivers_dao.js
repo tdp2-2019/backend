@@ -13,7 +13,7 @@ var drivers_dao = module.exports = {
   },
   
   update: function(id,body) {
-    var response="error";
+    var response = null;
     drivers.forEach(driver => {
       if (driver.id == id) {
         driver.DNI = body.DNI ? body.DNI : driver.DNI;
@@ -32,7 +32,7 @@ var drivers_dao = module.exports = {
         driver.endWorkTime = body.endWorkTime ? body.endWorkTime : driver.endWorkTime;
         driver.carColour = body.carColour ? body.carColour : driver.carColour;
         driver.carLicensePlate = body.carLicensePlate ? body.carLicensePlate : driver.carLicensePlate;
-        response = "OK";
+        response = driver;
       }
     });
     return response;
@@ -54,7 +54,7 @@ var drivers_dao = module.exports = {
 
   delete: function(id){
    var eliminado = drivers.splice(id - 1,1);
-   return eliminado.length>0?"OK: se elimino el elemento "+JSON.stringify(eliminado):"Error: elemento no encontrado.";
+   return eliminado.length>0?eliminado:null;
   },
 
 }
