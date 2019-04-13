@@ -7,7 +7,7 @@ var drivers_dao = module.exports = {
     var id = drivers.length + 1;
     var driver = new Driver(id, body.DNI, body.name, body.lastName, body.userName,body.email,
     body.telephone,body.celphone,body.address,body.brand,body.model,body.licenseNumber,body.insurancePolicyNumber,
-    body.startWorkTime,body.endWorkTime,carLicensePlate,carColour );
+    body.startWorkTime,body.endWorkTime,body.carLicensePlate,body.carColour );
     drivers.push(driver);
     return driver;
   },
