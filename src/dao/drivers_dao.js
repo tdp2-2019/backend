@@ -7,7 +7,7 @@ var drivers_dao = module.exports = {
     var id = drivers.length + 1;
     var driver = new Driver(id, body.DNI, body.name, body.lastName, body.userName,body.email,
     body.telephone,body.celphone,body.address,body.brand,body.model,body.licenseNumber,body.insurancePolicyNumber,
-    body.startWorkTime,body.endWorkTime);
+    body.startWorkTime,body.endWorkTime,carLicensePlate,carColour );
     drivers.push(driver);
     return driver;
   },
@@ -30,6 +30,8 @@ var drivers_dao = module.exports = {
         driver.insurancePolicyNumber = body.insurancePolicyNumber ? body.insurancePolicyNumber : driver.insurancePolicyNumber;
         driver.startWorkTime = body.startWorkTime ? body.startWorkTime : driver.startWorkTime;
         driver.endWorkTime = body.endWorkTime ? body.endWorkTime : driver.endWorkTime;
+        driver.carColour = body.carColour ? body.carColour : driver.carColour;
+        driver.carLicensePlate = body.carLicensePlate ? body.carLicensePlate : driver.carLicensePlate;
         response = "OK";
       }
     });
