@@ -44,8 +44,8 @@ var trips_dao = module.exports = {
   
   get: function(id) {
     return new Promise(resolve =>{
-      var a_t1rip;
-      tr1ips.forEach(trip => {
+      var a_trip;
+      trips.forEach(trip => {
         if (trip.id == id) {
           a_trip = trip;
           a_trip.current_position = trip.calculate_position();
