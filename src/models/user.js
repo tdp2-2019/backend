@@ -75,7 +75,7 @@ class User {
 
   set address(address)
   {
-    this._address = $address;
+    this._address = address;
   }
 
   toJSON(){
