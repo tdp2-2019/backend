@@ -13,7 +13,7 @@ var trips_dao = module.exports = {
     var destination_lat = body.destination.lat;
     var destination_long = body.destination.long;
     return this.get_waypoints(source_lat, source_long, destination_lat, destination_long).then(response => {
-      var trip = new Trip(id, body.client, body.driver, body.source, body.destination, body.start_time, body.pets);
+      var trip = new Trip(id, body.client, body.source, body.destination, body.start_time, body.pets);
       trip._points = response.points;
       trip._duration = response.duration;
       trip.calculate_price();
