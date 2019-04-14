@@ -4,17 +4,20 @@ var users = [];
 var users_dao = module.exports = {
   
   create : function(body) {
-    var id = users.length + 1;
-    var user = new User(id, body.DNI, body.name, body.lastName, body.userName,body.email,
-    body.telephone,body.celphone,body.address);
-    users.push(user);
-    return user;
+    return new Promise(resolve => {
+      var id = users.length + 1;
+      var user = new User(id, body.DNI, body.name, body.lastName, body.userName,body.email,
+      body.telephone,body.celphone,body.address);
+      users.push(user);
+      resolve(user);
+    });
   },
   
-  update: function(body) {
-    var response="error";
-    users.forEach(user => {
-      if (user.id == id) {
+  update: function(id,body) {
+    return new Promise(resolve => {
+      var response;
+      users.forEach(user => {
+        if (user.id == id) {
         user.DNI = body.DNI ? body.DNI : user.DNI;
         user.name = body.name ? body.name : user.name;
         user.lastName = body.lastName ? body.lastName : user.lastName;
@@ -23,29 +26,38 @@ var users_dao = module.exports = {
         user.telephone = body.telephone ? body.telephone : user.telephone;
         user.celphone = body.celphone ? body.celphone : user.celphone;
         user.address = body.address ? body.address : user.address;
-        response = "OK";
-      }
+        response = user;
+        }
+      });
+      resolve(response);
     });
-    return response;
+   
   },
   
   get: function(id) {
-    var a_user;
-    users.forEach(user => {
-      if (user.id == id) {
-        a_user = user;
-      }
-    });
-    return a_user;
+    return new Promise(resolve => {
+      var a_user;
+      users.forEach(user => {
+        if (user.id == id) {
+          a_user = user;
+        }
+      });
+      resolve(a_user);
+    });    
   },
   
   get_all: function() {
-    return users;
+    return new Promise(resolve => {
+      resolve(users);
+    });
   },
 
   delete: function(id){
-   var eliminado = users.splice(id - 1,1);
-   return eliminado.length>0?"OK: se elimino el elemento "+JSON.stringify(eliminado):"Error: elemento no encontrado.";
+    return new Promise(resolve => {
+      var eliminado = users.splice(id - 1,1);
+      resolve(eliminado.length>0?eliminado:null);
+    });
+
   },
 
 }
