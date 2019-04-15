@@ -33,3 +33,27 @@ curl -X GET \
 curl -X GET \
   https://correapp-api.herokuapp.com/trips/:ID
 ```
+
+### - Create a driver
+```bash
+curl -X POST \
+  http://localhost:5000/drivers/ \
+  -H 'Content-Type: application/json' \
+  -d '{
+	"DNI" : "1234",
+	"name" : "Gus",
+	"lastName": "Gimenez",
+	"email" : "gustavo@gmail.com",
+     "telephone": "123123123",
+     "celphone" : "1534343434",
+     "address" : "Libertador 7200",
+     "brand" : "Ford",
+     "model" : "Fiesta",
+     "licenseNumber" : 12312312,
+     "insurancePolicyNumber" : "AAADDDSS",
+      "startWorkTime" : "",
+      "endWorkTime" :"",
+      "carLicensePlate": "ABC123",
+      "carColour" : "Rojo"
+}'
+```
