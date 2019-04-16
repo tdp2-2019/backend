@@ -1,13 +1,11 @@
 class Driver {
 
-	constructor(id, DNI, name, lastName, userName,email,
+	constructor(DNI, name, lastName,email,
 		telephone,celphone,address,brand,model,licenseNumber,insurancePolicyNumber,
 		startWorkTime,endWorkTime,carLicensePlate,carColour ) {
-		this._id = id;
 		this._DNI = DNI;
 		this._name = name;
 		this._lastName = lastName;
-		this._userName = userName;
 		this._email = email;
 		this._telephone = telephone;
 		this._celphone = celphone;

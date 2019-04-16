@@ -40,7 +40,6 @@ var trips_dao = module.exports = {
   
   update: function(id, body) {
      return new Promise(resolve => {
-        var response;
         var sql = SqlString.format('UPDATE trips SET ? WHERE id = ?', [body, id]);
         sql = sql.replace(/`/g, "") + 'RETURNING *';
         connect().query(sql, (err, res) => {
