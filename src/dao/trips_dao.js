@@ -86,7 +86,7 @@ var trips_dao = module.exports = {
           if (res.rows.length > 0) {
             resolve(res.rows);
           } else {
-            resolve(null);
+            resolve([]);
           }
         }
       });

@@ -7,9 +7,9 @@ var drivers_dao = module.exports = {
   create : function(body) {
     return new Promise(resolve => {
       connect().
-      query('INSERT INTO drivers (firstname, lastname, phone, cellphone, mail, dni, car_brand, car_model, car_color, car_license_plate, car_insurance, work_start_time, work_end_time)' +
-      'VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, to_timestamp($12), to_timestamp($13)) RETURNING *', [body.name, body.lastName, body.telephone, body.celphone, body.email, body.DNI, body.brand,
-      body.model, body.carColour, body.carLicensePlate, body.insurancePolicyNumber, body.startWorkTime, body.endWorkTime], (err, res) => {
+      query('INSERT INTO drivers (name, lastname, telephone, celphone, email, dni, brand, model, carcolour, carlicenseplate, insurancepolicynumber, startworktime, endworktime)' +
+      'VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, to_timestamp($12), to_timestamp($13)) RETURNING *', [body.name, body.lastname, body.telephone, body.celphone, body.email, body.dni, body.brand,
+      body.model, body.carcolour, body.carlicenseplate, body.insurancepolicynumber, body.startworktime, body.endworktime], (err, res) => {
         if (err) {
           console.log("Unexpected database erro: " + err);
           resolve(null);
@@ -71,7 +71,7 @@ var drivers_dao = module.exports = {
           if (res.rows.length > 0) {
             resolve(res.rows);
           } else {
-            resolve(null);
+            resolve([]);
           }
         }
       });

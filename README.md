@@ -31,29 +31,59 @@ curl -X GET \
 ### - Get one trip
 ```bash
 curl -X GET \
-  https://correapp-api.herokuapp.com/trips/:ID
+  https://correapp-api.herokuapp.com/trips/:id
 ```
 
 ### - Create a driver
 ```bash
 curl -X POST \
-  http://localhost:5000/drivers/ \
+  https://correapp-api.herokuapp.com/drivers/ \
   -H 'Content-Type: application/json' \
   -d '{
-	"DNI" : "1234",
-	"name" : "Gus",
-	"lastName": "Gimenez",
-	"email" : "gustavo@gmail.com",
-     "telephone": "123123123",
-     "celphone" : "1534343434",
-     "address" : "Libertador 7200",
-     "brand" : "Ford",
-     "model" : "Fiesta",
-     "licenseNumber" : 12312312,
-     "insurancePolicyNumber" : "AAADDDSS",
-      "startWorkTime" : "",
-      "endWorkTime" :"",
-      "carLicensePlate": "ABC123",
-      "carColour" : "Rojo"
-}'
+    	"dni" : "1234",
+    	"name" : "Gus",
+    	"lastname": "Gimenez",
+    	"email" : "gustavo@gmail.com",
+      "telephone": "123123123",
+      "celphone" : "1534343434",
+      "address" : "Libertador 7200",
+      "brand" : "Ford",
+      "model" : "Fiesta",
+      "licensenumber" : 12312312,
+      "insurancepolicynumber" : "AAADDDSS",
+      "startworktime" : "",
+      "endworktime" :"",
+      "carlicenseplate": "ABC123",
+      "carcolour" : "Rojo"
+  }'
+```
+
+### - Get all drivers
+```bash
+curl -X GET \
+  https://correapp-api.herokuapp.com/drivers
+```
+
+### - Get one driver
+```bash
+curl -X GET \
+  https://correapp-api.herokuapp.com/drivers/:id
+```
+
+
+
+### - Create a user
+```bash
+curl -X POST \
+  https://correapp-api.herokuapp.com/users \
+  -H 'Content-Type: application/json' \
+  -d '{
+    	"name": "Lucas",
+    	"lastname" : "Pratto",
+    	"dni" : "28999999",
+    	"telephone" : "313131313",
+    	"celphone" : "1531313131",
+    	"email" : "lucas.pratto@gmail.com",
+    	"address" : "Jorge Newbery 1764 5to D"
+    }'
 ```
