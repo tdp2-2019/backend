@@ -1,11 +1,11 @@
 # Backend Document
-Backend server - Correapp
+https://correapp-api.herokuapp.com
 
 ## 1.Trips
 ### - Create trip
 ```bash
 curl -X POST \
-  http://localhost:5000/trips \
+  https://correapp-api.herokuapp.com/trips \
   -H 'Content-Type: application/json' \
   -d '{
 	"client" : "Gus",
@@ -25,11 +25,11 @@ curl -X POST \
 ### - Get all trips
 ```bash
 curl -X GET \
-  http://localhost:5000/trips
+  https://correapp-api.herokuapp.com/trips
 ```
 
 ### - Get one trip
 ```bash
 curl -X GET \
-  http://localhost:5000/trips/:ID
+  https://correapp-api.herokuapp.com/trips/:ID
 ```

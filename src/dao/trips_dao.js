@@ -13,7 +13,7 @@ var trips_dao = module.exports = {
     var destination_lat = body.destination.lat;
     var destination_long = body.destination.long;
     return this.get_waypoints(source_lat, source_long, destination_lat, destination_long).then(response => {
-      var trip = new Trip(id, body.client, body.driver, body.source, body.destination, body.start_time, body.pets);
+      var trip = new Trip(id, body.client, body.source, body.destination, body.start_time, body.pets);
       trip._points = response.points;
       trip._duration = response.duration;
       trip.calculate_price();
@@ -22,27 +22,48 @@ var trips_dao = module.exports = {
     });
   },
   
-  update: function(body) {
-    
+  update: function(id,body) {
+     return new Promise(resolve =>{
+        var response;
+          trips.forEach(trip => {
+          if (trip.id == id) {
+            trip.client = body.client ? body.client : trip.client;
+            trip.destination = body.destination ? body.destination : trip.destination;
+            trip.start_time = body.start_time ? body.start_time : trip.start_time;
+            trip.end_time = body.end_time ? body.end_time : trip.end_time;
+            trip.driver_id = body.driver_id ? body.driver_id : trip.driver_id;
+            trip.current_position = body.current_position ? body.current_position : trip.current_position;
+            trip.status = body.status ? body.status : trip.status;
+            if(body.rejection) trip.rejecteds.push(body.rejection);
+            response = trip;
+          }
+          });
+        resolve(response);
+     });
   },
   
   get: function(id) {
-    var a_trip;
-    trips.forEach(trip => {
-      if (trip.id == id) {
-        a_trip = trip;
-        a_trip.current_position = trip.calculate_position();
-      }
+    return new Promise(resolve =>{
+      var a_trip;
+      trips.forEach(trip => {
+        if (trip.id == id) {
+          a_trip = trip;
+          a_trip.current_position = trip.calculate_position();
+        }
+      });
+      resolve(a_trip);
     });
-    return a_trip;
   },
   
   get_all: function() {
-    var json_trips = []
-    trips.forEach(trip =>{
-      json_trips.push(trip.to_json());
+    return new Promise(resolve =>{
+      var json_trips = []
+      trips.forEach(trip =>{
+        json_trips.push(trip.to_json());
+      });
+      resolve(json_trips);
     });
-    return json_trips;
+   
   },
   
   get_waypoints: function(source_lat, source_long, destination_lat, destination_long) {
@@ -67,6 +88,13 @@ var trips_dao = module.exports = {
         });
         resolve(response);
       });
+    });
+  },
+
+  delete: function(id){
+    return new Promise(resolve => {
+      var eliminado = trips.splice(id - 1,1);
+      resolve(eliminado.length>0?eliminado:null);
     });
   },
 

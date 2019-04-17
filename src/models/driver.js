@@ -2,7 +2,7 @@ class Driver {
 
 	constructor(id, DNI, name, lastName, userName,email,
 		telephone,celphone,address,brand,model,licenseNumber,insurancePolicyNumber,
-		startWorkTime,endWorkTime ) {
+		startWorkTime,endWorkTime,carLicensePlate,carColour ) {
 		this._id = id;
 		this._DNI = DNI;
 		this._name = name;
@@ -18,6 +18,8 @@ class Driver {
 	    this._insurancePolicyNumber = insurancePolicyNumber;
 	    this._startWorkTime = startWorkTime;
 	    this._endWorkTime = endWorkTime;
+	    this._carLicensePlate = carLicensePlate;
+	    this._carColour = carColour;
 	}
 
 	get id() {
@@ -156,6 +158,26 @@ class Driver {
 		this._endWorkTime = endWorkTime;
 	}
 
+	get carColour()
+	{
+	    return this._carColour;
+	}
+	
+	set carColour(carColour)
+	{
+	    this._carColour = carColour;
+	}
+
+	get carLicensePlate()
+	{
+	    return this._carLicensePlate;
+	}
+	
+	set carLicensePlate(carLicensePlate)
+	{
+	    this._carLicensePlate = carLicensePlate;
+	}
+
 	toJSON(){
         return {
             id: this.id,
@@ -170,9 +192,11 @@ class Driver {
             brand : this.brand,
             model: this.model,
             licenseNumber : this.licenseNumber,
-            insurancePolicyNumber :this. insurancePolicyNumber,
+            insurancePolicyNumber :this.insurancePolicyNumber,
             startWorkTime : this.startWorkTime,
-            endWorkTime : this.endWorkTime
+            endWorkTime : this.endWorkTime,
+            carColour : this.carColour,
+            carLicensePlate : this.carLicensePlate
         };
     }
 }
