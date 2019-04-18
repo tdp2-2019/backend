@@ -14,5 +14,22 @@ describe("Rating_calculator tests: ", function() {
       ];
       return rating_calculator.driver_rating(trips).should.eventually.equal(4.55);
     });
+    
+    it("second example: ", function() {
+      var trips = [
+        {driver_rating: {rating: 5.0 }},
+      ];
+      return rating_calculator.driver_rating(trips).should.eventually.equal(5*1.3);
+    });
+    
+    it("Third example: ", function() {
+      var trips = [];
+      return rating_calculator.driver_rating(trips).should.eventually.equal(null);
+    });
+    
+    it("Forth example: ", function() {
+      var trips = null;
+      return rating_calculator.driver_rating(trips).should.eventually.equal(null);
+    });
   });
 });

@@ -26,7 +26,7 @@ var rating_calculator = module.exports = {
     
     rating: function(trips, intervals) {
       return new Promise(resolve => {
-        if (trips == null) return null;
+        if (trips == null || trips.length == 0) resolve(null);
         var number_of_trips = trips.length;
         var total_score = 0;
         trips.forEach(trip =>{
