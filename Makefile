@@ -4,5 +4,5 @@ install:
 run:
 	node app.js
 	
-test:
+run-test:
 	npm test
