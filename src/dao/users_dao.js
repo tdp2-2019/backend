@@ -1,63 +1,98 @@
 User = require('../models/user')
+const connect = require('../utils/database');
+var SqlString = require('sqlstring');
+
 var users = [];
 
 var users_dao = module.exports = {
   
   create : function(body) {
     return new Promise(resolve => {
-      var id = users.length + 1;
-      var user = new User(id, body.DNI, body.name, body.lastName, body.userName,body.email,
-      body.telephone,body.celphone,body.address);
-      users.push(user);
-      resolve(user);
-    });
-  },
-  
-  update: function(id,body) {
-    return new Promise(resolve => {
-      var response;
-      users.forEach(user => {
-        if (user.id == id) {
-          user.DNI = body.DNI ? body.DNI : user.DNI;
-          user.name = body.name ? body.name : user.name;
-          user.lastName = body.lastName ? body.lastName : user.lastName;
-          user.userName = body.userName ? body.userName : user.userName;
-          user.email = body.email ? body.email : user.email;
-          user.telephone = body.telephone ? body.telephone : user.telephone;
-          user.celphone = body.celphone ? body.celphone : user.celphone;
-          user.address = body.address ? body.address : user.address;
-          response = user;
+      connect().
+      query('INSERT INTO users (name, dni, lastname, email, telephone, celphone, address) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *',
+            [body.name, body.dni, body.lastname, body.email, body.telephone, body.celphone, body.address], (err, res) =>{
+        if (err) {
+          console.log("Unexpected database error: " + err);
+          resolve(null);
+        }
+        if (res) {
+          if (res.rows.length > 0){
+            resolve(res.rows[0]);
+          } else {
+            resolve([]);
+          }
         }
       });
-      resolve(response);
     });
+  },
    
+  update: function(id, body) {
+    return new Promise(resolve => {
+      var sql = SqlString.format('UPDATE users SET ? WHERE id = ?', [body, id]);
+      sql = sql.replace(/`/g, "") + 'RETURNING *';
+      connect().query(sql, (err, res) => {
+        if (err) {
+          console.log("Unexpected database error: " + err);
+          resolve(err);
+        } else if (res) {
+          if (res.rows.length > 0){
+            resolve(res.rows[0]);
+          } else {
+            resolve(null);
+          }
+        }
+      });
+    });
   },
   
   get: function(id) {
     return new Promise(resolve => {
-      var a_user;
-      users.forEach(user => {
-        if (user.id == id) {
-          a_user = user;
+      connect().query('SELECT * FROM users WHERE id = $1', [id], (err, res) => {
+        if (err) {
+          console.log("Unexpected database error: " + err);
+          resolve(err);
+        } else if (res) {
+          if (res.rows.length > 0){
+            resolve(res.rows[0]);
+          } else {
+            resolve(null);
+          }
         }
       });
-      resolve(a_user);
-    });    
+    });
   },
   
   get_all: function() {
     return new Promise(resolve => {
-      resolve(users);
+      connect().query('SELECT * FROM users', (err, res) => {
+        if (err) {
+          console.log("Unexpected database error: " + err);
+          resolve(err);
+        } else if(res) {
+          if (res.rows.length > 0) {
+            resolve(res.rows);
+          } else {
+            resolve([]);
+          }
+        }
+      });
     });
   },
 
-  delete: function(id){
+  delete: function(id) {
     return new Promise(resolve => {
-      var eliminado = users.splice(id - 1,1);
-      resolve(eliminado.length>0?eliminado:null);
+      connect().query('DELETE FROM users where id = $1 RETURNING *', [id],(err, res) => {
+        if (err) {
+          console.log("Unexpected database error: " + err);
+          resolve(err);
+        } else if (res) {
+          if (res.rows.length > 0) {
+            resolve(res.rows);
+          } else {
+            resolve(null);
+          }
+        }
+      });
     });
-
   },
-
 }

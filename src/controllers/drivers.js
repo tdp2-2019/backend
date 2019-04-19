@@ -10,7 +10,7 @@ drivers = function(app){
 		        res.status(404).json({
 		          errorCode: 2,
 		          message: "No data found"
-		        });     
+		        });
 	      	}else{
 		        res.status(500).json({
 		          errorCode: 3,
@@ -22,7 +22,7 @@ drivers = function(app){
 	           "code":1,
 	           "message":err.message
 	        })
-		}); 
+		});
 	});
   
 
@@ -34,7 +34,7 @@ drivers = function(app){
 	          res.status(404).json({
 	            errorCode: 2,
 	            message: "No data found"
-	          }); 
+	          });
 	        }else{
 	          res.status(500).json({
 	            errorCode: 3,
@@ -51,9 +51,9 @@ drivers = function(app){
   
   app.post('/drivers', (req, res, err) => {
   	drivers_dao.create(req.body).then(driver => {
-      if(driver != null){
+			if (driver != null) {
           res.status(200).json(driver);
-      }else{
+      } else {
         res.status(500).json({
           errorCode: 3,
           message: "Server error"
@@ -64,7 +64,7 @@ drivers = function(app){
            "code":1,
            "message":err.message
         })
-    }); 
+    });
   });
   
   app.put('/drivers/:id', (req, res, err) => {
@@ -75,7 +75,7 @@ drivers = function(app){
         res.status(404).json({
           errorCode: 2,
           message: "No data found"
-        }); 
+        });
       }else{
         res.status(500).json({
           errorCode: 3,
@@ -87,7 +87,7 @@ drivers = function(app){
            "code":1,
            "message":err.message
         })
-    }); 
+    });
   });
 
   app.delete('/drivers/:id', (req, res, err) => {
@@ -98,7 +98,7 @@ drivers = function(app){
         res.status(404).json({
           errorCode: 2,
           message: "No data found"
-        }); 
+        });
       }else{
         res.status(500).json({
           errorCode: 3,

@@ -3,14 +3,14 @@ var users_dao = require('../dao/users_dao')
 users = function(app){
   
   app.get('/users', (req, res) => {
-    users_dao.get_all().then(users =>{
-      if(users!=null && users.length>0){
-      res.status(200).json(users);
-      }else if(users.length == 0){
+    users_dao.get_all().then(users => {
+      if(users != null && users.length > 0){
+        res.status(200).json(users);
+      }else if(users != null && users.length == 0){
         res.status(404).json({
           errorCode: 2,
           message: "No data found"
-        });     
+        });
       }else{
         res.status(500).json({
           errorCode: 3,
@@ -22,7 +22,7 @@ users = function(app){
            "code":1,
            "message":err.message
         })
-    }); 
+    });
   });
   
   app.get('/users/:id', (req, res, err) => {

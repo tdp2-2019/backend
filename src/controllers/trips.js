@@ -4,14 +4,14 @@ trips = function(app){
   
   app.get('/trips', (req, res, err) => {
     trips_dao.get_all().then(trips =>{
-      if(trips!=null && trips.length>0){
-      res.status(200).json(trips);
-      }else if(trips.length == 0){
+      if (trips!=null && trips.length>0) {
+        res.status(200).json(trips);
+      } else if (trips.length == 0) {
         res.status(404).json({
           errorCode: 2,
           message: "No data found"
-        });     
-      }else{
+        });
+      } else {
         res.status(500).json({
           errorCode: 3,
           message: "Server error"
@@ -22,7 +22,7 @@ trips = function(app){
            "code":1,
            "message":err.message
         })
-    }); 
+    });
   });
   
   app.get('/trips/:id', (req, res, err) => {
@@ -33,7 +33,7 @@ trips = function(app){
           res.status(404).json({
             errorCode: 2,
             message: "No data found"
-          }); 
+          });
         }else{
           res.status(500).json({
             errorCode: 3,
@@ -63,7 +63,7 @@ trips = function(app){
            "code":1,
            "message":err.message
         })
-    }); 
+    });
   });
   
   app.put('/trips/:id', (req, res, err) => {
@@ -74,7 +74,7 @@ trips = function(app){
         res.status(404).json({
           errorCode: 2,
           message: "No data found"
-        }); 
+        });
       }else{
         res.status(500).json({
           errorCode: 3,
@@ -86,7 +86,7 @@ trips = function(app){
            "code":1,
            "message":err.message
         })
-    }); 
+    });
   });
   
   app.delete('/trips/:id', (req, res, err) => {
@@ -97,7 +97,7 @@ trips = function(app){
         res.status(404).json({
           errorCode: 2,
           message: "No data found"
-        }); 
+        });
       }else{
         res.status(500).json({
           errorCode: 3,
