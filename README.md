@@ -18,7 +18,7 @@ curl -X POST \
 		"long" : "-58.471460"
 	},
 	"start_time" : "2019-04-10T12:00:00Z",
-	"pets" : "Lo que quieran poner"
+	"pets" : [{"key1": "value", "key2":"value"}, {"key1": "value", "key2":"value"}]
 }'
 ```
 
@@ -51,8 +51,8 @@ curl -X POST \
       "model" : "Fiesta",
       "licensenumber" : 12312312,
       "insurancepolicynumber" : "AAADDDSS",
-      "startworktime" : "",
-      "endworktime" :"",
+      "startworktime" : "1555679093",
+      "endworktime" :"1555707893",
       "carlicenseplate": "ABC123",
       "carcolour" : "Rojo"
   }'
