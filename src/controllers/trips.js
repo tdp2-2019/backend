@@ -112,6 +112,29 @@ trips = function(app){
     });
   });
   
+  app.get('/trips/:id/drivers', (req, res, err) => {
+    trips_dao.get_drivers_by_score(req.params.id).then(drivers =>{
+      if(drivers!=null && drivers.length>0){
+        res.status(200).json(drivers);
+      }else if(trips.length == 0){
+        res.status(404).json({
+          errorCode: 2,
+          message: "No data found"
+        });     
+      }else{
+        res.status(500).json({
+          errorCode: 3,
+          message: "Server error"
+        });
+      }
+    }).catch(function (err) {
+        res.status(500).json({
+           "code":1,
+           "message":err.message
+        })
+    }); 
+  });
+
 }
 
 module.exports = trips;
