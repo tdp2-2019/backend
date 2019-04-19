@@ -39,23 +39,33 @@ var trips_dao = module.exports = {
   },
   
   update: function(id, body) {
-     return new Promise(resolve => {
+    return new Promise(resolve => {
+      if (body.rejection && body.rejection.driver_id) {
+         connect().query('INSERT INTO rejected_trips (driver_id, trip_id, comment) VALUES ($1, $2, $3)', [body.rejection.driver_id, id, body.rejection.comment], (err, res) => {
+           if (err) {
+             console.log("Unexpected insert error in rejected trips. " + err);
+             resolve(err);
+           }
+         });
+      }
+      delete body.rejection;
+      if (Object.keys(body).length) {
         var sql = SqlString.format('UPDATE trips SET ? WHERE id = ?', [body, id]);
-        sql = sql.replace(/`/g, "") + 'RETURNING *';
+        sql = sql.replace(/`/g, "") + ' RETURNING *';
         connect().query(sql, (err, res) => {
           if (err) {
             console.log("Unexpected database error: " + err);
             resolve(err);
           } else if (res) {
             if (res.rows.length > 0){
-              res.rows[0].current_position = trip_utils.calculate_position(res.rows[0].start_time, res.rows[0].points, res.rows[0].duration)
               resolve(res.rows[0]);
             } else {
               resolve(null);
             }
           }
         });
-     });
+      }
+    });
   },
   
   get: function(id) {
