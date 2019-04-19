@@ -87,3 +87,113 @@ curl -X POST \
     	"address" : "Jorge Newbery 1764 5to D"
     }'
 ```
+
+
+# Database info
+
+## Trips
+
+```sql
+-- Table: public.trips
+
+-- DROP TABLE public.trips;
+
+CREATE TABLE public.trips
+(
+    id integer NOT NULL DEFAULT nextval('trips_id_seq'::regclass),
+    source json NOT NULL,
+    destination json NOT NULL,
+    start_time timestamp with time zone,
+    end_time timestamp with time zone,
+    rejecteds json[],
+    pets json[],
+    driver_rating json,
+    user_rating json,
+    status text COLLATE pg_catalog."default",
+    driver_id integer,
+    user_id integer,
+    price double precision,
+    points json[],
+    duration double precision,
+    client text COLLATE pg_catalog."default",
+    CONSTRAINT trips_pkey PRIMARY KEY (id),
+    CONSTRAINT driver_id FOREIGN KEY (driver_id)
+        REFERENCES public.drivers (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION,
+    CONSTRAINT user_id FOREIGN KEY (user_id)
+        REFERENCES public.users (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+)
+WITH (
+    OIDS = FALSE
+)
+TABLESPACE pg_default;
+
+ALTER TABLE public.trips
+    OWNER to ckpxmqgdcaigzi;
+```
+
+## Drivers
+
+```sql
+-- Table: public.drivers
+
+-- DROP TABLE public.drivers;
+
+CREATE TABLE public.drivers
+(
+    name text COLLATE pg_catalog."default" NOT NULL,
+    lastname text COLLATE pg_catalog."default" NOT NULL,
+    id integer NOT NULL DEFAULT nextval('drivers_id_seq'::regclass),
+    telephone text COLLATE pg_catalog."default",
+    celphone text COLLATE pg_catalog."default",
+    email text COLLATE pg_catalog."default" NOT NULL,
+    dni text COLLATE pg_catalog."default" NOT NULL,
+    brand text COLLATE pg_catalog."default" NOT NULL,
+    model text COLLATE pg_catalog."default" NOT NULL,
+    carcolour text COLLATE pg_catalog."default" NOT NULL,
+    carlicenseplate text COLLATE pg_catalog."default" NOT NULL,
+    insurancepolicynumber text COLLATE pg_catalog."default" NOT NULL,
+    startworktime time with time zone NOT NULL,
+    endworktime time with time zone NOT NULL,
+    address text COLLATE pg_catalog."default",
+    licensenumber text COLLATE pg_catalog."default",
+    CONSTRAINT drivers_pkey PRIMARY KEY (id)
+)
+WITH (
+    OIDS = FALSE
+)
+TABLESPACE pg_default;
+
+ALTER TABLE public.drivers
+    OWNER to ckpxmqgdcaigzi;
+```
+
+## Users
+```sql
+-- Table: public.users
+
+-- DROP TABLE public.users;
+
+CREATE TABLE public.users
+(
+    name text COLLATE pg_catalog."default" NOT NULL,
+    lastname text COLLATE pg_catalog."default" NOT NULL,
+    email text COLLATE pg_catalog."default" NOT NULL,
+    dni text COLLATE pg_catalog."default" NOT NULL,
+    telephone text COLLATE pg_catalog."default" NOT NULL,
+    celphone text COLLATE pg_catalog."default",
+    id integer NOT NULL DEFAULT nextval('users_id_seq'::regclass),
+    address text COLLATE pg_catalog."default",
+    CONSTRAINT users_pkey PRIMARY KEY (id)
+)
+WITH (
+    OIDS = FALSE
+)
+TABLESPACE pg_default;
+
+ALTER TABLE public.users
+    OWNER to ckpxmqgdcaigzi;
+```
