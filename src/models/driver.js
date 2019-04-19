@@ -2,7 +2,7 @@ class Driver {
 
 	constructor(DNI, name, lastName,email,
 		telephone,celphone,address,brand,model,licenseNumber,insurancePolicyNumber,
-		startWorkTime,endWorkTime,carLicensePlate,carColour ) {
+		startWorkTime,endWorkTime,carLicensePlate,carColour,currentPosition ) {
 		this._DNI = DNI;
 		this._name = name;
 		this._lastName = lastName;
@@ -18,6 +18,7 @@ class Driver {
 	    this._endWorkTime = endWorkTime;
 	    this._carLicensePlate = carLicensePlate;
 	    this._carColour = carColour;
+	    this._currentPosition = currentPosition;
 	}
 
 	get id() {
@@ -176,6 +177,16 @@ class Driver {
 	    this._carLicensePlate = carLicensePlate;
 	}
 
+	get currentPosition()
+	{
+	    return this._currentPosition;
+	}
+	
+	set currentPosition(currentPosition)
+	{
+	    this._currentPosition = currentPosition;
+	}
+
 	toJSON(){
         return {
             id: this.id,
@@ -194,7 +205,8 @@ class Driver {
             startWorkTime : this.startWorkTime,
             endWorkTime : this.endWorkTime,
             carColour : this.carColour,
-            carLicensePlate : this.carLicensePlate
+            carLicensePlate : this.carLicensePlate,
+            currentPosition : this.currentPosition
         };
     }
 }

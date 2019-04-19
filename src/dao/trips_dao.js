@@ -145,4 +145,22 @@ var trips_dao = module.exports = {
     });
   },
 
+  get_drivers_by_score: function(id){
+    return new Promise(resolve =>{
+        connect().query('SELECT * FROM trips WHERE id = $1', [id], (err, res) => {
+        if (err) {
+          console.log("Unexpected database error: " + err);
+          resolve(err);
+        } else if (res) {
+          if (res.rows.length > 0){
+            res.rows[0].current_position = trip_utils.calculate_position(res.rows[0].start_time, res.rows[0].points, res.rows[0].duration)
+            resolve(res.rows[0]);
+          } else {
+            resolve(null);
+          }
+        }
+      });
+    });
+  }
+
 }
