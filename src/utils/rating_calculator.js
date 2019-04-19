@@ -14,21 +14,23 @@ var user_intervals =[
   {factor: 2, min: 12, max: Infinity},
 ]
 
+var driver_penalty = 3;
+
 var rating_calculator = module.exports = {
     
-    driver_rating: function(trips) {
-      return this.rating(trips, driver_intervals);
+    driver_rating: function(trips, number_of_rejected_trips) {
+      return this.rating(trips, driver_intervals, number_of_rejected_trips);
     },
     
     user_rating: function(trips) {
-      return this.rating(trips, user_intervals);
+      return this.rating(trips, user_intervals, 0);
     },
     
-    rating: function(trips, intervals) {
+    rating: function(trips, intervals, number_of_rejected_trips) {
       return new Promise(resolve => {
-        if (trips == null || trips.length == 0) resolve(null);
-        var number_of_trips = trips.length;
-        var total_score = 0;
+        if ((trips == null || trips.length == 0) && number_of_rejected_trips == 0) resolve(null);
+        var number_of_trips = trips.length + number_of_rejected_trips;
+        var total_score = driver_penalty * number_of_rejected_trips;
         trips.forEach(trip =>{
           total_score += trip.driver_rating.rating;
         });
