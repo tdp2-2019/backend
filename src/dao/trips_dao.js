@@ -42,8 +42,8 @@ var trips_dao = module.exports = {
   
   update: function(id, body) {
     return new Promise(resolve => {
+      var rejection = body.rejection;
       if (body.rejection && body.rejection.driver_id) {
-        var rejection = body.rejection;
         connect().query('INSERT INTO rejected_trips (driver_id, trip_id, comment) VALUES ($1, $2, $3)', [rejection.driver_id, id, rejection.comment], (err, res) => {
           if (err) {
             console.log("Unexpected insert error in rejected trips. " + err);
@@ -57,7 +57,7 @@ var trips_dao = module.exports = {
             console.log("Unexpected insert error in rejected trips. " + err);
             resolve(err);
           }
-          var driver_id = res_trip.rows[0].driver_id;
+          var driver_id = (rejection !== undefined )? rejection.driver_id : res_trip.rows[0].driver_id;
           connect().query('SELECT * FROM trips WHERE driver_id = $1', [driver_id], (err, driver_trips) => {
             if (err) {
               console.log("Unexpected error in calculate driver rating. " + err);
