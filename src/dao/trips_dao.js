@@ -1,69 +1,106 @@
 Trip = require('../models/trip')
 var polyUtil = require('polyline-encoded');
+var SqlString = require('sqlstring');
 const request = require('request');
-
-var trips = [];
+const connect = require('../utils/database');
+const trip_utils =require('../utils/trip_utils');
 
 var trips_dao = module.exports = {
   
   create : function(body) {
-    var id = trips.length + 1;
     var source_lat = body.source.lat;
     var source_long = body.source.long;
     var destination_lat = body.destination.lat;
     var destination_long = body.destination.long;
     return this.get_waypoints(source_lat, source_long, destination_lat, destination_long).then(response => {
-      var trip = new Trip(id, body.client, body.source, body.destination, body.start_time, body.pets);
+      var trip = new Trip(body.client, body.source, body.destination, body.start_time, body.pets);
       trip._points = response.points;
       trip._duration = response.duration;
-      trip.calculate_price();
-      trips.push(trip);
-      return trip;
+      trip.calculate_price(trip.start_time, trip._points, trip._duration);
+      return new Promise(function(resolve, reject) {
+        connect().
+        query('INSERT INTO trips (source, destination, start_time, pets, status, rejecteds, price, points, duration, client) VALUES ($1, $2, to_timestamp($3), $4, $5, $6, $7, $8, $9, $10) RETURNING *',
+              [trip.source, trip.destination, trip.start_time, trip.pets, 'created', [], trip.price, trip._points, trip._duration, trip.client], (err, res) =>{
+          if (err) {
+            console.log("Unexpected database error: " + err);
+            resolve(null);
+          }
+          if (res) {
+            if (res.rows.length > 0){
+              res.rows[0].current_position = trip_utils.calculate_position(trip.start_time, trip._points, trip._duration);
+              resolve(res.rows[0]);
+            } else {
+              resolve([]);
+            }
+          }
+        });
+      });
     });
   },
   
-  update: function(id,body) {
-     return new Promise(resolve =>{
-        var response;
-          trips.forEach(trip => {
-          if (trip.id == id) {
-            trip.client = body.client ? body.client : trip.client;
-            trip.destination = body.destination ? body.destination : trip.destination;
-            trip.start_time = body.start_time ? body.start_time : trip.start_time;
-            trip.end_time = body.end_time ? body.end_time : trip.end_time;
-            trip.driver_id = body.driver_id ? body.driver_id : trip.driver_id;
-            trip.current_position = body.current_position ? body.current_position : trip.current_position;
-            trip.status = body.status ? body.status : trip.status;
-            if(body.rejection) trip.rejecteds.push(body.rejection);
-            response = trip;
+  update: function(id, body) {
+    return new Promise(resolve => {
+      if (body.rejection && body.rejection.driver_id) {
+         connect().query('INSERT INTO rejected_trips (driver_id, trip_id, comment) VALUES ($1, $2, $3)', [body.rejection.driver_id, id, body.rejection.comment], (err, res) => {
+           if (err) {
+             console.log("Unexpected insert error in rejected trips. " + err);
+             resolve(err);
+           }
+         });
+      }
+      delete body.rejection;
+      if (Object.keys(body).length) {
+        var sql = SqlString.format('UPDATE trips SET ? WHERE id = ?', [body, id]);
+        sql = sql.replace(/`/g, "") + ' RETURNING *';
+        connect().query(sql, (err, res) => {
+          if (err) {
+            console.log("Unexpected database error: " + err);
+            resolve(err);
+          } else if (res) {
+            if (res.rows.length > 0){
+              resolve(res.rows[0]);
+            } else {
+              resolve(null);
+            }
           }
-          });
-        resolve(response);
-     });
+        });
+      }
+    });
   },
   
   get: function(id) {
     return new Promise(resolve =>{
-      var a_trip;
-      trips.forEach(trip => {
-        if (trip.id == id) {
-          a_trip = trip;
-          a_trip.current_position = trip.calculate_position();
+      connect().query('SELECT * FROM trips WHERE id = $1', [id], (err, res) => {
+        if (err) {
+          console.log("Unexpected database error: " + err);
+          resolve(err);
+        } else if (res) {
+          if (res.rows.length > 0){
+            res.rows[0].current_position = trip_utils.calculate_position(res.rows[0].start_time, res.rows[0].points, res.rows[0].duration)
+            resolve(res.rows[0]);
+          } else {
+            resolve(null);
+          }
         }
       });
-      resolve(a_trip);
     });
   },
   
   get_all: function() {
-    return new Promise(resolve =>{
-      var json_trips = []
-      trips.forEach(trip =>{
-        json_trips.push(trip.to_json());
+    return new Promise(resolve => {
+      connect().query('SELECT * FROM trips', (err, res) => {
+        if (err) {
+          console.log("Unexpected database error: " + err);
+          resolve(err);
+        } else if(res) {
+          if (res.rows.length > 0) {
+            resolve(res.rows);
+          } else {
+            resolve([]);
+          }
+        }
       });
-      resolve(json_trips);
     });
-   
   },
   
   get_waypoints: function(source_lat, source_long, destination_lat, destination_long) {
@@ -93,9 +130,37 @@ var trips_dao = module.exports = {
 
   delete: function(id){
     return new Promise(resolve => {
-      var eliminado = trips.splice(id - 1,1);
-      resolve(eliminado.length>0?eliminado:null);
+      connect().query('DELETE FROM trips where id = $1 RETURNING *', [id],(err, res) => {
+        if (err) {
+          console.log("Unexpected database error: " + err);
+          resolve(err);
+        } else if (res) {
+          if (res.rows.length > 0) {
+            resolve(res.rows);
+          } else {
+            resolve(null);
+          }
+        }
+      });
     });
   },
+
+  get_drivers_by_score: function(id){
+    return new Promise(resolve =>{
+        connect().query('SELECT * FROM trips WHERE id = $1', [id], (err, res) => {
+        if (err) {
+          console.log("Unexpected database error: " + err);
+          resolve(err);
+        } else if (res) {
+          if (res.rows.length > 0){
+            res.rows[0].current_position = trip_utils.calculate_position(res.rows[0].start_time, res.rows[0].points, res.rows[0].duration)
+            resolve(res.rows[0]);
+          } else {
+            resolve(null);
+          }
+        }
+      });
+    });
+  }
 
 }

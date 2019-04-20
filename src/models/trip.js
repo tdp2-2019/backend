@@ -1,7 +1,6 @@
 class Trip {
   
-  constructor(id, client, source, destination, start_time, pets) {
-    this._id = id;
+  constructor(client, source, destination, start_time, pets) {
     this._client = client;
     this._source = source;
     this._destination = destination;
@@ -77,18 +76,6 @@ class Trip {
     this._driver_rating.comment = comment;
   }
   
-  calculate_position() {
-    var now = Date.now()
-    var seconds_from_begginig = (now - this._start_time) / 1000
-    if (seconds_from_begginig <= 0) {
-      return this._points[0];
-    }
-    var seconds_per_interval = this._duration / this._points.length;
-    var index = Math.round(seconds_from_begginig/seconds_per_interval)
-    
-    return this._points[index]
-  }
-  
   calculate_price() {
     this._price = this._duration * 20;
   }
@@ -133,6 +120,27 @@ class Trip {
   {
       this._driver_id = driver_id;
   }
+  
+  get source() {
+    return this._source;
+  }
+
+  get destination() {
+    return this._destination;
+  }
+
+  get pets() {
+    return this._pets;
+  }
+
+  get price() {
+    return this._price;
+  }
+  
+  get start_time() {
+    return this._start_time;
+  }
+
 
 }
 

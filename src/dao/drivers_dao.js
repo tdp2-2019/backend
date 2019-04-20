@@ -1,72 +1,97 @@
 Driver = require('../models/driver')
-var drivers = [];
+const connect = require('../utils/database');
+var SqlString = require('sqlstring');
 
 var drivers_dao = module.exports = {
   
   create : function(body) {
-    return new Promise(resolve =>{
-      var id = drivers.length + 1;
-      var driver = new Driver(id, body.DNI, body.name, body.lastName, body.userName,body.email,
-      body.telephone,body.celphone,body.address,body.brand,body.model,body.licenseNumber,body.insurancePolicyNumber,
-      body.startWorkTime,body.endWorkTime,body.carLicensePlate,body.carColour );
-      drivers.push(driver);
-      resolve(driver);
-    });    
-  },
-  
-  update: function(id,body) {
-    return new Promise(resolve =>{
-      var response = null;
-      drivers.forEach(driver => {
-        if (driver.id == id) {
-          driver.DNI = body.DNI ? body.DNI : driver.DNI;
-          driver.name = body.name ? body.name : driver.name;
-          driver.lastName = body.lastName ? body.lastName : driver.lastName;
-          driver.userName = body.userName ? body.userName : driver.userName;
-          driver.email = body.email ? body.email : driver.email;
-          driver.telephone = body.telephone ? body.telephone : driver.telephone;
-          driver.celphone = body.celphone ? body.celphone : driver.celphone;
-          driver.address = body.address ? body.address : driver.address;
-          driver.brand = body.brand ? body.brand : driver.brand;
-          driver.model = body.model ? body.model : driver.model;
-          driver.licenseNumber = body.licenseNumber ? body.licenseNumber : driver.licenseNumber;
-          driver.insurancePolicyNumber = body.insurancePolicyNumber ? body.insurancePolicyNumber : driver.insurancePolicyNumber;
-          driver.startWorkTime = body.startWorkTime ? body.startWorkTime : driver.startWorkTime;
-          driver.endWorkTime = body.endWorkTime ? body.endWorkTime : driver.endWorkTime;
-          driver.carColour = body.carColour ? body.carColour : driver.carColour;
-          driver.carLicensePlate = body.carLicensePlate ? body.carLicensePlate : driver.carLicensePlate;
-          response = driver;
+    return new Promise(resolve => {
+      connect().
+      query('INSERT INTO drivers (name, lastname, telephone, celphone, email, dni, address, brand, model, licensenumber, carcolour, carlicenseplate, insurancepolicynumber, startworktime, endworktime, currentposition) ' +
+      'VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, to_timestamp($14), to_timestamp($15),$16) RETURNING *', [body.name, body.lastname, body.telephone, body.celphone, body.email, body.dni, body.address,
+        body.brand, body.model, body.licensenumber, body.carcolour, body.carlicenseplate, body.insurancepolicynumber, body.startworktime, body.endworktime, body.currentPosition], (err, res) => {
+        if (err) {
+          console.log("Unexpected database erro: " + err);
+          resolve(null);
+        }
+        if (res) {
+          if (res.rows.length > 0) {
+            resolve(res.rows[0]);
+          } else {
+            resolve([]);
+          }
         }
       });
-      resolve(response);
     });
-    
+  },
+  
+  update: function(id, body) {
+    return new Promise(resolve => {
+      var sql = SqlString.format('UPDATE drivers SET ? WHERE id = ?', [body, id]);
+      sql = sql.replace(/`/g, "") + 'RETURNING *';
+      connect().query(sql, (err, res) => {
+        if (err) {
+          console.log("Unexpected database error: " + err);
+          resolve(err);
+        } else if (res) {
+          if (res.rows.length > 0){
+            resolve(res.rows[0]);
+          } else {
+            resolve(null);
+          }
+        }
+      });
+    });
   },
   
   get: function(id) {
     return new Promise(resolve =>{
-      var a_driver;
-      drivers.forEach(driver => {
-        if (driver.id == id) {
-          a_driver = driver;
+      connect().query('SELECT * FROM drivers WHERE id = $1', [id], (err, res) => {
+        if (err) {
+          console.log("Unexpected database error: " + err);
+          resolve(err);
+        } else if (res) {
+          if (res.rows.length > 0){
+            resolve(res.rows[0]);
+          } else {
+            resolve(null);
+          }
         }
       });
-      resolve(a_driver);
     });
-
-    
   },
   
   get_all: function() {
     return new Promise(resolve =>{
-        resolve(drivers);
+      connect().query('SELECT * FROM drivers', (err, res) => {
+        if (err) {
+          console.log("Unexpected database error: " + err);
+          resolve(err);
+        } else if(res) {
+          if (res.rows.length > 0) {
+            resolve(res.rows);
+          } else {
+            resolve([]);
+          }
+        }
+      });
     });
   },
 
   delete: function(id){
     return new Promise(resolve =>{
-      var eliminado = drivers.splice(id - 1,1);
-      resolve(eliminado.length>0?eliminado:null);
+      connect().query('DELETE FROM drivers where id = $1 RETURNING *', [id],(err, res) => {
+        if (err) {
+          console.log("Unexpected database error: " + err);
+          resolve(err);
+        } else if (res) {
+          if (res.rows.length > 0) {
+            resolve(res.rows);
+          } else {
+            resolve(null);
+          }
+        }
+      });
     });
   },
 

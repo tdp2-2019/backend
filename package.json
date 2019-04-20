@@ -22,7 +22,10 @@
     "chai-as-promised": "^7.1.1",
     "express": "^4.16.4",
     "mocha": "^6.1.4",
+    "pg": "^7.9.0",
+    "pg-pool": "^2.0.6",
     "polyline-encoded": "0.0.8",
-    "request": "^2.88.0"
+    "request": "^2.88.0",
+    "sqlstring": "^2.3.1"
   }
 }
