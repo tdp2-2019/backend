@@ -1,6 +1,8 @@
 Trip = require('../models/trip')
 var polyUtil = require('polyline-encoded');
 var SqlString = require('sqlstring');
+var rating_calculator = require('../utils/rating_calculator');
+var util = require('util');
 const request = require('request');
 const connect = require('../utils/database');
 const trip_utils =require('../utils/trip_utils');
@@ -41,17 +43,60 @@ var trips_dao = module.exports = {
   update: function(id, body) {
     return new Promise(resolve => {
       if (body.rejection && body.rejection.driver_id) {
-         connect().query('INSERT INTO rejected_trips (driver_id, trip_id, comment) VALUES ($1, $2, $3)', [body.rejection.driver_id, id, body.rejection.comment], (err, res) => {
-           if (err) {
-             console.log("Unexpected insert error in rejected trips. " + err);
-             resolve(err);
-           }
-         });
+        var rejection = body.rejection;
+        connect().query('INSERT INTO rejected_trips (driver_id, trip_id, comment) VALUES ($1, $2, $3)', [rejection.driver_id, id, rejection.comment], (err, res) => {
+          if (err) {
+            console.log("Unexpected insert error in rejected trips. " + err);
+            resolve(err);
+          }
+        });
+      }
+      if (body.rejection && body.rejection.driver_id || body.driver_rating && body.driver_rating.rating) {
+        connect().query('SELECT * FROM trips WHERE id = $1', [id], (err, res_trip) => {
+          if (err) {
+            console.log("Unexpected insert error in rejected trips. " + err);
+            resolve(err);
+          }
+          var driver_id = res_trip.rows[0].driver_id;
+          connect().query('SELECT * FROM trips WHERE driver_id = $1', [driver_id], (err, driver_trips) => {
+            if (err) {
+              console.log("Unexpected error in calculate driver rating. " + err);
+              resolve(err);
+            }
+            if(driver_trips) {
+              connect().query('SELECT * FROM rejected_trips WHERE driver_id = $1', [driver_id], (err, driver_rejected) => {
+                if (err) {
+                  console.log("Unexpected error in calculate driver rating. " + err);
+                  resolve(err);
+                }
+                if (driver_rejected) {
+                  rating_calculator.driver_rating(driver_trips.rows, driver_rejected.rows.length).then(driver_rating => {
+                    connect().query('UPDATE drivers SET rating = $1 WHERE id = $2', [driver_rating, driver_id], (err, res) => {
+                      if (err) {
+                        console.log("Unexpected error in calculate driver rating. " + err);
+                        resolve(err);
+                      } else {
+                        console.log("Driver rating updated.");
+                      }
+                    });
+                  });
+                }
+              });
+            }
+          });
+        });
       }
       delete body.rejection;
       if (Object.keys(body).length) {
-        var sql = SqlString.format('UPDATE trips SET ? WHERE id = ?', [body, id]);
+        if (body.driver_rating) {
+          body.driver_rating = JSON.stringify(body.driver_rating);
+        }
+        if (body.user_rating) {
+          body.user_rating = JSON.stringify(body.user_rating);
+        }
+        var sql = SqlString.format('UPDATE trips SET ? WHERE id = ?', [body, id]).replace(/\\/g, "");
         sql = sql.replace(/`/g, "") + ' RETURNING *';
+        console.log(sql)
         connect().query(sql, (err, res) => {
           if (err) {
             console.log("Unexpected database error: " + err);
@@ -64,6 +109,8 @@ var trips_dao = module.exports = {
             }
           }
         });
+      } else {
+        resolve(body);
       }
     });
   },

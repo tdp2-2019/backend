@@ -32,7 +32,9 @@ var rating_calculator = module.exports = {
         var number_of_trips = trips.length + number_of_rejected_trips;
         var total_score = driver_penalty * number_of_rejected_trips;
         trips.forEach(trip =>{
-          total_score += trip.driver_rating.rating;
+          if (trip.driver_rating && trip.driver_rating.rating) {
+            total_score += trip.driver_rating.rating;
+          }
         });
         total_score = total_score / number_of_trips;
         resolve(this.factor(intervals, number_of_trips).then(factor =>{
