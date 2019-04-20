@@ -4,7 +4,7 @@
   "description": "backend-server",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "./node_modules/mocha/bin/_mocha -R spec"
   },
   "repository": {
     "type": "git",
@@ -18,7 +18,10 @@
   "homepage": "https://github.com/tdp2-2019/backend#readme",
   "dependencies": {
     "body-parser": "^1.18.3",
+    "chai": "^4.2.0",
+    "chai-as-promised": "^7.1.1",
     "express": "^4.16.4",
+    "mocha": "^6.1.4",
     "pg": "^7.9.0",
     "pg-pool": "^2.0.6",
     "polyline-encoded": "0.0.8",
