@@ -3,9 +3,11 @@ var polyUtil = require('polyline-encoded');
 var SqlString = require('sqlstring');
 var rating_calculator = require('../utils/rating_calculator');
 var util = require('util');
+var drivers_dao = require('../dao/drivers_dao');
 const request = require('request');
 const connect = require('../utils/database');
 const trip_utils =require('../utils/trip_utils');
+
 
 var trips_dao = module.exports = {
   
@@ -200,8 +202,17 @@ var trips_dao = module.exports = {
           resolve(err);
         } else if (res) {
           if (res.rows.length > 0){
-            res.rows[0].current_position = trip_utils.calculate_position(res.rows[0].start_time, res.rows[0].points, res.rows[0].duration)
-            resolve(res.rows[0]);
+            drivers_dao.get_all().then(drivers =>{
+              //para poder hacer el forEach
+              drivers=Object.keys(drivers).map(
+              function(key){
+                  return drivers[key];
+                }
+              );
+              res.rows[0].current_position = trip_utils.calculate_position(res.rows[0].start_time, res.rows[0].points, res.rows[0].duration)
+              var orderedDrivers = trip_utils.get_drivers_by_score(id,res.rows[0].source,drivers);
+              resolve(orderedDrivers);
+            });          
           } else {
             resolve(null);
           }
