@@ -116,7 +116,7 @@ trips = function(app){
     trips_dao.get_drivers_by_score(req.params.id).then(drivers =>{
       if(drivers!=null && drivers.length>0){
         res.status(200).json(drivers);
-      }else if(trips.length == 0){
+      }else if(drivers.length == 0){
         res.status(404).json({
           errorCode: 2,
           message: "No data found"
