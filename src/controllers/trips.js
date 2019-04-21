@@ -3,7 +3,7 @@ var trips_dao = require('../dao/trips_dao')
 trips = function(app){
   
   app.get('/trips', (req, res, err) => {
-    trips_dao.get_all().then(trips =>{
+    trips_dao.get_all(req.query).then(trips =>{
       if (trips!=null && trips.length>0) {
         res.status(200).json(trips);
       } else if (trips.length == 0) {

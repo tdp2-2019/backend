@@ -23,7 +23,7 @@ var trips_dao = module.exports = {
       trip.calculate_price(trip.start_time, trip._points, trip._duration);
       return new Promise(function(resolve, reject) {
         connect().
-        query('INSERT INTO trips (source, destination, start_time, pets, status, rejecteds, price, points, duration, client) VALUES ($1, $2, to_timestamp($3), $4, $5, $6, $7, $8, $9, $10) RETURNING *',
+        query('INSERT INTO trips (source, destination, start_time, pets, status, rejecteds, price, points, duration, client) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING *',
               [trip.source, trip.destination, trip.start_time, trip.pets, 'created', [], trip.price, trip._points, trip._duration, trip.client], (err, res) =>{
           if (err) {
             console.log("Unexpected database error: " + err);
@@ -135,9 +135,16 @@ var trips_dao = module.exports = {
     });
   },
   
-  get_all: function() {
+  get_all: function(querystring) {
     return new Promise(resolve => {
-      connect().query('SELECT * FROM trips', (err, res) => {
+      var query = "";
+      if (Object.keys(querystring).length) {
+        var sql = SqlString.format('SELECT * FROM trips WHERE ?', [querystring]);
+        query = sql.replace(/`/g, "");
+      } else {
+        query = 'SELECT * FROM trips';
+      }
+      connect().query(query, (err, res) => {
         if (err) {
           console.log("Unexpected database error: " + err);
           resolve(err);
