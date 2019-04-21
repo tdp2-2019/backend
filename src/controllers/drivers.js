@@ -3,7 +3,7 @@ var drivers_dao = require('../dao/drivers_dao')
 drivers = function(app){
 
 	app.get('/drivers', (req, res,err) => {
-	 	drivers_dao.get_all().then(drivers =>{
+		drivers_dao.get_all(req.query).then(drivers =>{
 	      	if(drivers!=null && drivers.length>0){
 	      		res.status(200).json(drivers);
 	      	}else if(drivers.length == 0){

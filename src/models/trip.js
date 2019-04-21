@@ -4,7 +4,7 @@ class Trip {
     this._client = client;
     this._source = source;
     this._destination = destination;
-    this._start_time = Date.now();
+    this._start_time = start_time;
     this._end_time = null;
     this._driver_id = null;
     this._rejecteds = [];

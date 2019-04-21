@@ -54,7 +54,9 @@ curl -X POST \
       "startworktime" : "1555679093",
       "endworktime" :"1555707893",
       "carlicenseplate": "ABC123",
-      "carcolour" : "Rojo"
+      "carcolour" : "Rojo",
+      "photo_url" : "www.google.com.ar",
+      "signup_date" : "2019-04-10T12:00:00Z"
   }'
 ```
 
