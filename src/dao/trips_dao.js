@@ -219,6 +219,23 @@ var trips_dao = module.exports = {
         }
       });
     });
+  },
+
+  get_rejects: function(id){
+     return new Promise(resolve =>{
+        connect().query('SELECT * FROM rejected_trips WHERE trip_id = $1', [id], (err, res) => {
+        if (err) {
+          console.log("Unexpected database error: " + err);
+          resolve(err);
+        } else if (res.rows != null) {
+          if (res.rows.length > 0){
+              resolve(res.rows);
+          } else {
+            resolve(null);
+          }
+        }
+      });
+    });
   }
 
 }
