@@ -135,6 +135,29 @@ trips = function(app){
     }); 
   });
 
+  app.get('/trips/:id/rejects', (req, res, err) => {
+    trips_dao.get_rejects(req.params.id).then(rejects =>{
+      if(rejects != null){
+        res.status(200).json(rejects);
+      }else if(rejects == null){
+        res.status(404).json({
+          errorCode: 2,
+          message: "No data found"
+        });
+      }else{
+        res.status(500).json({
+          errorCode: 3,
+          message: "Server error"
+        });
+      }
+      }).catch(function (err) {
+        res.status(500).json({
+           "code":1,
+           "message":err.message
+        })
+      });
+  });
+
 }
 
 module.exports = trips;
