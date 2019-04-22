@@ -214,7 +214,7 @@ var trips_dao = module.exports = {
           resolve(err);
         } else if (res) {
           if (res.rows.length > 0){
-            drivers_dao.get_all().then(drivers =>{
+            drivers_dao.get_all({}).then(drivers =>{
               //para poder hacer el forEach
               drivers=Object.keys(drivers).map(
               function(key){
