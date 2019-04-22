@@ -144,10 +144,11 @@ var trips_dao = module.exports = {
       var query = "";
       if (Object.keys(querystring).length) {
         var sql = SqlString.format('SELECT * FROM trips WHERE ?', [querystring]);
-        query = sql.replace(/`/g, "");
+        query = sql.replace(/`/g, "").replace(/,/g, " AND");
       } else {
         query = 'SELECT * FROM trips';
       }
+      console.log(query)
       connect().query(query, (err, res) => {
         if (err) {
           console.log("Unexpected database error: " + err);
