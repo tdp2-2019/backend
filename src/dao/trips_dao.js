@@ -59,33 +59,37 @@ var trips_dao = module.exports = {
             console.log("Unexpected insert error in rejected trips. " + err);
             resolve(err);
           }
-          var driver_id = (rejection !== undefined )? rejection.driver_id : res_trip.rows[0].driver_id;
-          connect().query('SELECT * FROM trips WHERE driver_id = $1', [driver_id], (err, driver_trips) => {
-            if (err) {
-              console.log("Unexpected error in calculate driver rating. " + err);
-              resolve(err);
-            }
-            if(driver_trips) {
-              connect().query('SELECT * FROM rejected_trips WHERE driver_id = $1', [driver_id], (err, driver_rejected) => {
-                if (err) {
-                  console.log("Unexpected error in calculate driver rating. " + err);
-                  resolve(err);
-                }
-                if (driver_rejected) {
-                  rating_calculator.driver_rating(driver_trips.rows, driver_rejected.rows.length).then(driver_rating => {
-                    connect().query('UPDATE drivers SET rating = $1 WHERE id = $2', [driver_rating, driver_id], (err, res) => {
-                      if (err) {
-                        console.log("Unexpected error in calculate driver rating. " + err);
-                        resolve(err);
-                      } else {
-                        console.log("Driver rating updated.");
-                      }
+          if (res_trip.rowCount != 0) {
+            var driver_id = (rejection !== undefined )? rejection.driver_id : res_trip.rows[0].driver_id;
+            connect().query('SELECT * FROM trips WHERE driver_id = $1', [driver_id], (err, driver_trips) => {
+              if (err) {
+                console.log("Unexpected error in calculate driver rating. " + err);
+                resolve(err);
+              }
+              if(driver_trips) {
+                connect().query('SELECT * FROM rejected_trips WHERE driver_id = $1', [driver_id], (err, driver_rejected) => {
+                  if (err) {
+                    console.log("Unexpected error in calculate driver rating. " + err);
+                    resolve(err);
+                  }
+                  if (driver_rejected) {
+                    rating_calculator.driver_rating(driver_trips.rows, driver_rejected.rows.length).then(driver_rating => {
+                      connect().query('UPDATE drivers SET rating = $1 WHERE id = $2', [driver_rating, driver_id], (err, res) => {
+                        if (err) {
+                          console.log("Unexpected error in calculate driver rating. " + err);
+                          resolve(err);
+                        } else {
+                          console.log("Driver rating updated.");
+                        }
+                      });
                     });
-                  });
-                }
-              });
-            }
-          });
+                  }
+                });
+              }
+            });
+          } else {
+            resolve(null);
+          }
         });
       }
       delete body.rejection;
