@@ -18,7 +18,8 @@ curl -X POST \
 		"long" : "-58.471460"
 	},
 	"start_time" : "2019-04-10T12:00:00Z",
-	"pets" : [{"key1": "value", "key2":"value"}, {"key1": "value", "key2":"value"}]
+	"pets" : [{"key1": "value", "key2":"value"}, {"key1": "value", "key2":"value"}],
+  "companion" : "false"
 }'
 ```
 
@@ -56,7 +57,9 @@ curl -X POST \
       "carlicenseplate": "ABC123",
       "carcolour" : "Rojo",
       "photo_url" : "www.google.com.ar",
-      "signup_date" : "2019-04-10T12:00:00Z"
+      "signup_date" : "2019-04-10T12:00:00Z",
+      "license_photo_url" : "http://photo.com",
+      "car_plate_photo_url" : "http://foto.com"
   }'
 ```
 

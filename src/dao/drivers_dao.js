@@ -7,9 +7,12 @@ var drivers_dao = module.exports = {
   create : function(body) {
     return new Promise(resolve => {
       connect().
-      query('INSERT INTO drivers (name, lastname, telephone, celphone, email, dni, address, brand, model, licensenumber, carcolour, carlicenseplate, insurancepolicynumber, startworktime, endworktime, currentposition, signup_date, photo_url) ' +
-      'VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, to_timestamp($14), to_timestamp($15),$16, $17, $18) RETURNING *', [body.name, body.lastname, body.telephone, body.celphone, body.email, body.dni, body.address,
-        body.brand, body.model, body.licensenumber, body.carcolour, body.carlicenseplate, body.insurancepolicynumber, body.startworktime, body.endworktime, body.currentPosition, body.signup_date, body.photo_url], (err, res) => {
+      query('INSERT INTO drivers (name, lastname, telephone, celphone, email, dni, address, brand, model, licensenumber, carcolour,' +
+       ' carlicenseplate, insurancepolicynumber, startworktime, endworktime, currentposition, signup_date, photo_url, car_plate_photo_url,' +
+       ' license_photo_url, status) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, to_timestamp($14), to_timestamp($15),$16, $17, $18, $19, $20, $21) RETURNING *',
+      [body.name, body.lastname, body.telephone, body.celphone, body.email, body.dni, body.address, body.brand, body.model, body.licensenumber,
+        body.carcolour, body.carlicenseplate, body.insurancepolicynumber, body.startworktime, body.endworktime, body.currentPosition,
+        body.signup_date, body.photo_url, body.car_plate_photo_url, body.license_photo_url, 'No confirmado'], (err, res) => {
         if (err) {
           console.log("Unexpected database erro: " + err);
           resolve(null);
