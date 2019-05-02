@@ -1,4 +1,5 @@
 var trips_dao = require('../dao/trips_dao')
+trips_dao.init();
 
 trips = function(app){
   
