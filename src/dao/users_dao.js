@@ -9,8 +9,8 @@ var users_dao = module.exports = {
   create : function(body) {
     return new Promise(resolve => {
       connect().
-      query('INSERT INTO users (name, dni, lastname, email, telephone, celphone, address) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *',
-            [body.name, body.dni, body.lastname, body.email, body.telephone, body.celphone, body.address], (err, res) =>{
+      query('INSERT INTO users (name, dni, lastname, email, telephone, celphone, address, firebase_id) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *',
+            [body.name, body.dni, body.lastname, body.email, body.telephone, body.celphone, body.address, body.firebase_id], (err, res) =>{
         if (err) {
           console.log("Unexpected database error: " + err);
           resolve(null);
