@@ -69,7 +69,8 @@ var trips_dao = module.exports = {
             }
             var rejections = res.rows.length;
             if (trip.timeouts + rejections <= 2) {
-              request('http://localhost:5000/trips/' + trip.id + '/drivers', {json: true}, (err, res, body) => {
+              var port = process.env.PORT || 5000;
+              request('http://localhost:' + port + '/trips/' + trip.id + '/drivers', {json: true}, (err, res, body) => {
                 var next_driver = body[trip.timeouts + rejections].driverId;
                 connect().query('UPDATE trips SET driver_id = $1, times_without_driver_answer = $2 WHERE id = $3', [next_driver, 0, id], (err, res) => {
                   if (err) {

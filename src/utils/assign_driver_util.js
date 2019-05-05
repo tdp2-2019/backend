@@ -27,7 +27,8 @@ var assign_driver_util = module.exports = {
               }
               rejected_trips = res.rows.length;
               if (trip.timeouts + rejected_trips <= 2) {
-                request('http://localhost:5000/trips/' + trip.id + '/drivers', {json: true}, (err, res, body) => {
+                var port = process.env.PORT || 5000;
+                request('http://localhost:' + port + '/trips/' + trip.id + '/drivers', {json: true}, (err, res, body) => {
                   //actualizo la cantidad de timeouts, me traigo el proximo driver y lo asigno guardandolo en la base. Y despues mando la notificacion.
                   if (err) {
                     console.log("Error getting the drivers list for trip " + trip.id + " - " + err);
