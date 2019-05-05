@@ -120,7 +120,7 @@ trips = function(app){
         res.status(404).json({
           errorCode: 2,
           message: "No data found"
-        });     
+        });
       }else{
         res.status(500).json({
           errorCode: 3,
@@ -132,7 +132,7 @@ trips = function(app){
            "code":1,
            "message":err.message
         })
-    }); 
+    });
   });
 
   app.get('/trips/:id/rejects', (req, res, err) => {
