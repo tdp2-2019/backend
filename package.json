@@ -21,6 +21,7 @@
     "chai": "^4.2.0",
     "chai-as-promised": "^7.1.1",
     "express": "^4.16.4",
+    "firebase-admin": "^7.3.0",
     "mocha": "^6.1.4",
     "pg": "^7.9.0",
     "pg-pool": "^2.0.6",

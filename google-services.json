@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "194454923266",
+    "firebase_url": "https://correapp-76bda.firebaseio.com",
+    "project_id": "correapp-76bda",
+    "storage_bucket": "correapp-76bda.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:194454923266:android:0315ac1bf8d3c021",
+        "android_client_info": {
+          "package_name": "com.fiuba.tdpii.correapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "194454923266-24m5i9fcafmioa5a54v5q0utlpl01c85.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBKduXTL6hvbRXb3FMRV3w1VHssrC4P8Lc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "194454923266-24m5i9fcafmioa5a54v5q0utlpl01c85.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
