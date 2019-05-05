@@ -4,13 +4,11 @@ const request = require('request');
 
 var assign_driver_util = module.exports = {
   assign : function() {
-    console.log("Assigning");
     connect().query('SELECT * FROM trips WHERE status = $1', ['created'], (err, res) => {
       if (err) {
         console.log("Error getting trips to assign drivers." + err);
         return;
       }
-      console.log(res.rows.length);
       if (res.rows && res.rows.length > 0) {
         var trips = res.rows
         trips.forEach(trip => {
@@ -34,25 +32,26 @@ var assign_driver_util = module.exports = {
                   if (err) {
                     console.log("Error getting the drivers list for trip " + trip.id + " - " + err);
                   }
-                  console.log()
                   var next_driver = body[trip.timeouts + rejected_trips].driverId;
-                  connect().query('UPDATE trips SET timeouts = $1, driver_id = $2, times_without_driver_answer = $3 WHERE id = $4', [trip.timeouts + 1, next_driver, 0, trip.id], (err, res) => {
-                    if (err) {
-                      console.log("Error updating number of timeous in trip " + trip.id + " - " + err);
-                    }
-                  });
-                connect().query('SELECT firebase_id FROM drivers WHERE id = $1', [next_driver], (err, res) => {
-                  if (err) {
-                    console.log("Error getting driver to send notification. " + err);
-                  }
-                  var firebase_id = res.rows[0].firebase_id;
-                  if (firebase_id) {
-                    notifications_utils.send(firebase_id, "Nuevo viaje disponible!", "Hola! Tenes un nuevo viaje disponible para tomar!");
-                  } else {
-                    console.log("The driver " + next_driver + " does not have firebase id to send notification");
+                  if (body && trip.timeouts && rejected_trips) {
+                    connect().query('UPDATE trips SET timeouts = $1, driver_id = $2, times_without_driver_answer = $3 WHERE id = $4', [trip.timeouts + 1, next_driver, 0, trip.id], (err, res) => {
+                      if (err) {
+                        console.log("Error updating number of timeous in trip " + trip.id + " - " + err);
+                      }
+                    });
+                    connect().query('SELECT firebase_id FROM drivers WHERE id = $1', [next_driver], (err, res) => {
+                      if (err) {
+                        console.log("Error getting driver to send notification. " + err);
+                      }
+                      var firebase_id = res.rows[0].firebase_id;
+                      if (firebase_id) {
+                        notifications_utils.send(firebase_id, "Nuevo viaje disponible!", "Hola! Tenes un nuevo viaje disponible para tomar!");
+                      } else {
+                        console.log("The driver " + next_driver + " does not have firebase id to send notification");
+                      }
+                    });
                   }
                 });
-              });
               } else {
                 connect().query('UPDATE trips SET status = $1 WHERE id = $2', ['Aborted', trip.id], (err, res) => {
                   if (err) {
