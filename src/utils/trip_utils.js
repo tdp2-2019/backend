@@ -1,3 +1,5 @@
+var moment = require('moment');
+
 function trip_utils(){}
 
 
@@ -67,6 +69,292 @@ trip_utils.getRings= function(distance){
 	if(distance<4500){return 9;}
 	if(distance<5000){return 10;}
 	if(distance>=5000){return 11;}
+}
+
+trip_utils.getPrice = function(animalCount,companion,km,min,startTime,tripRates){
+	return  parseFloat(animalCount*tripRates.animalrate) + 
+		   parseFloat(companion?tripRates.companion:0) +
+		   parseFloat(km*tripRates.km) +
+		   parseFloat(min*tripRates.min) + 
+		   parseFloat(trip_utils.getNightRange(tripRates,startTime));
+}
+
+trip_utils.getNightRange = function(tripRates,startTime){
+	var restaHoras = parseInt(tripRates.nighttimeend.split(':')[0]) - parseInt(tripRates.nighttimestart.split(':')[0]);
+	var restaMinutos = parseInt(tripRates.nighttimeend.split(':')[1]) - parseInt(tripRates.nighttimestart.split(':')[1]);
+	var restaSegundos = parseInt(tripRates.nighttimeend.split(':')[2]) - parseInt(tripRates.nighttimestart.split(':')[2]);
+
+	if(restaHoras > 0) {
+		return trip_utils.between(tripRates,startTime.split('T')[1].split('.')[0])?tripRates.nightrate:0;
+	}else if(restaHoras < 0){
+		return trip_utils.between2(tripRates,startTime.split('T')[1].split('.')[0])?tripRates.nightrate:0;
+	}else{
+		//son horas iguales ==
+		if(restaMinutos > 0){
+			return trip_utils.between(tripRates,startTime.split('T')[1].split('.')[0])?tripRates.nightrate:0;
+		}else if(restaMinutos < 0){
+			return trip_utils.between2(tripRates,startTime.split('T')[1].split('.')[0])?tripRates.nightrate:0;
+		}else{
+			//mintuos ==
+			if(restaSegundos >0 ){
+				return trip_utils.between(tripRates,startTime.split('T')[1].split('.')[0])?tripRates.nightrate:0;
+			}else if(restaSegundos < 0){
+				return trip_utils.between2(tripRates,startTime.split('T')[1].split('.')[0])?tripRates.nightrate:0;
+			}else{
+				//Son iguales
+				return false;
+			}
+		}
+	}
+}
+
+trip_utils.between = function(tripRates,t1){ //mayor que cero
+	var HorasTRE = parseInt(tripRates.nighttimeend.split(':')[0]);
+	var MinutosTRE = parseInt(tripRates.nighttimeend.split(':')[1]);
+	var SegundosTRE = parseInt(tripRates.nighttimeend.split(':')[2]);
+	var HorasTRS = parseInt(tripRates.nighttimestart.split(':')[0]);
+	var MinutosTRS = parseInt(tripRates.nighttimestart.split(':')[1]);
+	var SegundosTRS = parseInt(tripRates.nighttimestart.split(':')[2]);
+	var HorasT1 = parseInt(t1.split(':')[0]);
+	var MinutosT1 = parseInt(t1.split(':')[1]);
+	var SegundosT1 = parseInt(t1.split(':')[2]);
+
+	if(HorasT1 > HorasTRS){
+		if(HorasT1 < HorasTRE){
+			return true;	
+		}else if(HorasT1 == HorasTRE){
+			if(MinutosT1 < MinutosTRE){
+				return true;
+			}else if( MinutosT1 == MinutosTRE){
+				if(SegundosT1 < SegundosTRE){
+					return true;
+				}else if(SegundosT1 == SegundosTRE){
+					//mismo tiempo
+					return true;
+				}else{	
+					return false;
+				}
+			}else{
+				return false;
+			}
+		}else{
+			return false;
+		}
+		
+	}else if(HorasT1 == HorasTRS){
+		if(MinutosT1 > MinutosTRS){
+			if(HorasT1 < HorasTRE){
+				return true;	
+			}else if(HorasT1 == HorasTRE){
+				if(MinutosT1 < MinutosTRE){
+					return true;
+				}else if( MinutosT1 == MinutosTRE){
+					if(SegundosT1 < SegundosTRE){
+						return true;
+					}else if(SegundosT1 == SegundosTRE){
+						//mismo tiempo
+						return true;
+					}else{
+						return false;
+					}
+				}else{
+					return false;
+				}
+			}else{
+				return false;
+			}
+		}else if(MinutosT1 == MinutosTRS){
+			if(SegundosT1 > SegundosTRS){
+				if(HorasT1 < HorasTRE){
+					return true;	
+				}else if(HorasT1 == HorasTRE){
+					if(MinutosT1 < MinutosTRE){
+						return true;
+					}else if( MinutosT1 == MinutosTRE){
+						if(SegundosT1 < SegundosTRE){
+							return true;
+						}else if(SegundosT1 == SegundosTRE){
+							//mismo tiempo
+							return true;
+						}else{
+							return false;
+						}
+					}else{
+						return false;
+					}
+				}else{
+					return false;
+				}
+			}else if( SegundosT1 == SegundosTRS){
+				return true;
+			}else{
+				return false;
+			}
+		}else{
+			return false;
+		}
+	}else{
+		return false;
+	}
+	
+	
+}
+
+
+trip_utils.between2 = function(tripRates,t1){ //menor que cero
+	var HorasTRE = parseInt(tripRates.nighttimeend.split(':')[0]);
+	var MinutosTRE = parseInt(tripRates.nighttimeend.split(':')[1]);
+	var SegundosTRE = parseInt(tripRates.nighttimeend.split(':')[2]);
+	var HorasTRS = parseInt(tripRates.nighttimestart.split(':')[0]);
+	var MinutosTRS = parseInt(tripRates.nighttimestart.split(':')[1]);
+	var SegundosTRS = parseInt(tripRates.nighttimestart.split(':')[2]);
+	var HorasT1 = parseInt(t1.split(':')[0]);
+	var MinutosT1 = parseInt(t1.split(':')[1]);
+	var SegundosT1 = parseInt(t1.split(':')[2]);
+
+	if(HorasT1 < HorasTRS){
+		if(HorasT1 > HorasTRE){
+			return false;
+		}else if(HorasT1 == HorasTRE){
+			//voy por minutos
+			if(MinutosT1 > MinutosTRE){
+				return false;
+			}else if(MinutosT1 == MinutosTRE){
+			//voy por segundos
+				if(SegundosT1 > SegundosTRE){
+					return false;
+				}else if(SegundosT1 == SegundosTRE){
+					return true;
+				}else{
+					return true;
+				}
+			}else{
+				return true;
+			}
+		}else{
+			return true;
+		}
+	}else if( HorasT1 == HorasTRS){
+		if(MinutosT1>MinutosTRS){
+			if(HorasT1 > HorasTRE){
+				return true;
+			}else if(HorasT1 == HorasTRE){
+				//voy por minutos
+				if(MinutosT1 > MinutosTRE){
+					return true;
+				}else if(MinutosT1 == MinutosTRE){
+				//voy por segundos
+					if(SegundosT1 > SegundosTRE){
+						return true;
+					}else if(SegundosT1 == SegundosTRE){
+						return true;
+					}else{
+						return false;
+					}
+				}else{
+					return false;
+				}
+			}else{
+				return false;
+			}
+		}else if( MinutosT1 == MinutosTRS){
+			//voy por segundos
+			if(SegundosT1> SegundosTRS){
+				if(HorasT1 > HorasTRE){
+					return true;
+				}else if(HorasT1 == HorasTRE){
+				//voy por minutos
+					if(MinutosT1 > MinutosTRE){
+						return true;
+					}else if(MinutosT1 == MinutosTRE){
+						//voy por segundos
+						if(SegundosT1 > SegundosTRE){
+							return true;
+						}else if(SegundosT1 == SegundosTRE){
+							return true;
+						}else{
+							return false;
+						}
+					}else{
+						return false;
+					}
+				}else{
+					return false;
+				}
+			}else if( SegundosT1 == SegundosTRS){
+				//son iguales
+				return true;
+			}else if(SegundosT1 < SegundosTRS){
+				if(HorasT1 > HorasTRE){
+					return false;
+				}else if(HorasT1 == HorasTRE){
+					//voy por minutos
+					if(MinutosT1 > MinutosTRE){
+						return false;
+					}else if(MinutosT1 == MinutosTRE){
+					//voy por segundos
+						if(SegundosT1 > SegundosTRE){
+							return false;
+						}else if(SegundosT1 == SegundosTRE){
+							return true;
+						}else{
+							return true;
+						}
+					}else{
+						return true;
+					}
+				}else{
+					return true;
+				}
+			}
+		}else if( MinutosT1 < MinutosTRS){
+			if(HorasT1 > HorasTRE){
+				return false;
+			}else if(HorasT1 == HorasTRE){
+				//voy por minutos
+				if(MinutosT1 > MinutosTRE){
+					return false;
+				}else if(MinutosT1 == MinutosTRE){
+				//voy por segundos
+					if(SegundosT1 > SegundosTRE){
+						return false;
+					}else if(SegundosT1 == SegundosTRE){
+						return true;
+					}else{
+						return true;
+					}
+				}else{
+					return true;
+				}
+			}else{
+				return true;
+			}
+		}
+	}else if(HorasT1 > HorasTRS){
+		if(HorasT1 > HorasTRE){
+			return true;
+		}else if(HorasT1 == HorasTRE){
+			//voy por minutos
+			if(MinutosT1 > MinutosTRE){
+				return true;
+			}else if(MinutosT1 == MinutosTRE){
+				//voy por segundos
+				if(SegundosT1 > SegundosTRE){
+					return true;
+				}else if(SegundosT1 == SegundosTRE){
+					return true;
+				}else{
+					return false;
+				}
+			}else{
+				return false;
+			}
+		}else{
+			return false;
+		}
+	}
+	
+	
 }
 
 module.exports = trip_utils;
