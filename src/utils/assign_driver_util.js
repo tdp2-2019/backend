@@ -54,13 +54,12 @@ var assign_driver_util = module.exports = {
                 });
               });
               } else {
-                /*connect().query('UPDATE trips SET status = $1 WHERE id = $2', ['Aborted', trip.id], (err, res) => {
+                connect().query('UPDATE trips SET status = $1 WHERE id = $2', ['Aborted', trip.id], (err, res) => {
                   if (err) {
                     console.log("Error setting status aborted to trip. " + err);
                   }
                   // Mandar notificacion al user avisandole que se aborto el viaje, que pruebe mas tarde.
-                });*/
-                console.log("ABORTED");
+                });
               }
             });
             }
