@@ -26,8 +26,7 @@ require('./src/controllers/drivers')(app);
 const PORT = process.env.PORT || 5000;
 
 cron.schedule("* * * * *", function() {
-      //assign_driver_util.assign();
-      console.log("blablabla");
+      assign_driver_util.assign();
 });
 
 
