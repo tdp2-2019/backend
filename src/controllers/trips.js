@@ -1,5 +1,6 @@
 var trips_dao = require('../dao/trips_dao');
 var assign_driver_util = require('../utils/assign_driver_util');
+trips_dao.init();
 
 trips = function(app){
   

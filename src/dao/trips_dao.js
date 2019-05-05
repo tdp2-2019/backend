@@ -4,6 +4,7 @@ var SqlString = require('sqlstring');
 var rating_calculator = require('../utils/rating_calculator');
 var util = require('util');
 var drivers_dao = require('../dao/drivers_dao');
+var tripRates;
 const request = require('request');
 const connect = require('../utils/database');
 const trip_utils =require('../utils/trip_utils');
@@ -20,6 +21,10 @@ var trips_dao = module.exports = {
       var trip = new Trip(body.client, body.source, body.destination, body.start_time, body.pets);
       trip._points = response.points;
       trip._duration = response.duration;
+      var price = trip_utils.getPrice(body.pets.length,
+                  body.companion,
+                  trip_utils.distFrom(body.source.lat,body.source.long,body.destination.lat,body.destination.long)/1000 ,
+                  trip._duration/60,body.start_time,tripRates);
       trip.calculate_price(trip.start_time, trip._points, trip._duration);
       return new Promise(function(resolve, reject) {
         connect().
@@ -290,6 +295,31 @@ var trips_dao = module.exports = {
         }
       });
     });
-  }
+  },
+
+  init: function(){
+    connect().query('SELECT animalrate, companion, km, min, nighttimeend, nighttimestart, nightrate, idzona FROM rates WHERE idzona = 1;', (err, res) => {
+        if (err) {
+          console.log("Unexpected database error: " + err);
+        } else if (res.rows != null) {
+          if (res.rows.length > 0){
+            console.log(res.rows);
+            tripRates = res.rows[0];
+          } else {
+            //default
+            tripRates = { animalrate: '50',
+                          companion: '100',
+                          km: '25',
+                          min: '5',
+                          nighttimeend: '06:00:00',
+                          nighttimestart: '18:00:00',
+                          nightrate: '50',
+                          idzona: 1 
+                        };
+          }
+        }
+    });
+  },
+
 
 }
