@@ -1,5 +1,6 @@
 const express = require("express");
 const bodyParser = require('body-parser');
+const cron = require("node-cron");
 
 const app = express();
 
@@ -23,8 +24,15 @@ require('./src/controllers/drivers')(app);
 
 const PORT = process.env.PORT || 5000;
 
+cron.schedule("* * * * *", function() {
+      console.log("running a task every minute");
+});
+
+
 app.listen(PORT, () => {
-  console.log(`server running on port ${PORT}`)
+  console.log(`server running on port ${PORT}`);
+  //Ir a buscar todos los trips en espera, checkear hace cuanto no contesta el driver, y renovarlo si pasaron 5 minutos.
+  //Y aumentarle el contador de ser necesario. O hacerlo por hora?
 });
 
 
