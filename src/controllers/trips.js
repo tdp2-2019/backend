@@ -1,4 +1,5 @@
-var trips_dao = require('../dao/trips_dao')
+var trips_dao = require('../dao/trips_dao');
+var assign_driver_util = require('../utils/assign_driver_util');
 
 trips = function(app){
   
@@ -156,6 +157,10 @@ trips = function(app){
            "message":err.message
         })
       });
+  });
+  
+  app.get('/test_assign', (req, res, err) => {
+    assign_driver_util.assign();
   });
 
 }

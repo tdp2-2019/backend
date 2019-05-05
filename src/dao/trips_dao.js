@@ -23,9 +23,9 @@ var trips_dao = module.exports = {
       trip.calculate_price(trip.start_time, trip._points, trip._duration);
       return new Promise(function(resolve, reject) {
         connect().
-        query('INSERT INTO trips (source, destination, start_time, pets, status, rejecteds, price, points, duration, client, companion)' +
-              ' VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) RETURNING *',
-              [body.source, body.destination, body.start_time, body.pets, 'created', [], trip.price, trip._points, trip._duration, trip.client, body.companion], (err, res) =>{
+        query('INSERT INTO trips (source, destination, start_time, pets, status, rejecteds, price, points, duration, client, companion, times_without_driver_answer, timeouts)' +
+              ' VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13) RETURNING *',
+              [body.source, body.destination, body.start_time, body.pets, 'created', [], trip.price, trip._points, trip._duration, trip.client, body.companion, 0, 0], (err, res) =>{
           if (err) {
             console.log("Unexpected database error: " + err);
             resolve(null);
@@ -52,6 +52,47 @@ var trips_dao = module.exports = {
             console.log("Unexpected insert error in rejected trips. " + err);
             resolve(err);
           }
+        });
+        connect().query('SELECT * FROM trips WHERE id = $1', [id], (err, res) => {
+          if (err) {
+            console.log("Error getting trip for update driver. " + err);
+          }
+          var trip = res.rows[0];
+          connect().query('SELECT * FROM rejected_trips WHERE trip_id = $1', [id], (err, res) => {
+            if (err) {
+              console.log("Error getting rejected trips to update driver");
+            }
+            var rejections = res.rows.length;
+            if (trip.timeouts + rejections <= 2) {
+              request('http://localhost:5000/trips/' + trip.id + '/drivers', {json: true}, (err, res, body) => {
+                var next_driver = body[trip.timeouts + rejections].driverId;
+                connect().query('UPDATE trips SET driver_id = $1, times_without_driver_answer = $2 WHERE id = $3', [next_driver, 0, id], (err, res) => {
+                  if (err) {
+                    console.log("Error assigning driver for a trip because of a rejection. " + err);
+                  }
+                  connect().query('SELECT firebase_id FROM drivers WHERE id = $1', [next_driver], (err, res) => {
+                    if (err) {
+                      console.log("Error getting the firebase_id from driver " + next_driver + ". " + err);
+                    }
+                    var firebase_id = res.rows[0].firebase_id;
+                    if (firebase_id) {
+                      notifications_utils.send(firebase_id, "Nuevo viaje disponible!", "Hola! Tenes un nuevo viaje disponible para tomar!");
+                    }
+                    else {
+                      console.log("Driver " + next_driver + " does not have firebase id");
+                    }
+                  });
+                });
+              });
+            } else {
+              connect().query('UPDATE trips SET status = $1 WHERE id = $2', ['Aborted', id], (err, res) => {
+                if (err) {
+                  console.log("Error putting aborted status to a trip");
+                }
+                //Enviar aca la notificacion al user de que el viaje no se pudo concretar, que intente mas tarde.
+              });
+            }
+          });
         });
       }
       if (body.rejection && body.rejection.driver_id || body.driver_rating && body.driver_rating.rating) {
@@ -225,7 +266,7 @@ var trips_dao = module.exports = {
               res.rows[0].current_position = trip_utils.calculate_position(res.rows[0].start_time, res.rows[0].points, res.rows[0].duration)
               var orderedDrivers = trip_utils.get_drivers_by_score(id,res.rows[0].source,drivers);
               resolve(orderedDrivers);
-            });          
+            });
           } else {
             resolve(null);
           }
