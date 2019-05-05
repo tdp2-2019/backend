@@ -32,8 +32,8 @@ var assign_driver_util = module.exports = {
                   if (err) {
                     console.log("Error getting the drivers list for trip " + trip.id + " - " + err);
                   }
-                  var next_driver = body[trip.timeouts + rejected_trips].driverId;
                   if (body && trip.timeouts && rejected_trips) {
+                    var next_driver = body[trip.timeouts + rejected_trips].driverId;
                     connect().query('UPDATE trips SET timeouts = $1, driver_id = $2, times_without_driver_answer = $3 WHERE id = $4', [trip.timeouts + 1, next_driver, 0, trip.id], (err, res) => {
                       if (err) {
                         console.log("Error updating number of timeous in trip " + trip.id + " - " + err);
