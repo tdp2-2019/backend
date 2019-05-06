@@ -38,6 +38,7 @@ var trips_dao = module.exports = {
           if (res) {
             if (res.rows.length > 0){
               var trip_id = res.rows[0].id;
+              var port = process.env.PORT || 5000;
               request('http://localhost:' + port + '/trips/' + trip_id + '/drivers', {json: true}, (err, res, body) => {
                 if (body) {
                   var driver_id = body[0].driverId;
