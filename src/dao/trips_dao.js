@@ -30,7 +30,7 @@ var trips_dao = module.exports = {
         connect().
         query('INSERT INTO trips (source, destination, start_time, pets, status, rejecteds, price, points, duration, client, companion, times_without_driver_answer, timeouts)' +
               ' VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13) RETURNING *',
-              [body.source, body.destination, body.start_time, body.pets, 'created', [], trip.price, trip._points, trip._duration, trip.client, body.companion, 0, 0], (err, res) =>{
+              [body.source, body.destination, body.start_time, body.pets, 'created', [], price, trip._points, trip._duration, trip.client, body.companion, 0, 0], (err, res) =>{
           if (err) {
             console.log("Unexpected database error: " + err);
             resolve(null);
