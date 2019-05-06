@@ -5,6 +5,7 @@ var rating_calculator = require('../utils/rating_calculator');
 var util = require('util');
 var drivers_dao = require('../dao/drivers_dao');
 var tripRates;
+var notifications_utils = require('../utils/notifications_utils');
 const request = require('request');
 const connect = require('../utils/database');
 const trip_utils =require('../utils/trip_utils');
