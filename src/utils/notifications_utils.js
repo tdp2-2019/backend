@@ -12,9 +12,11 @@ var notifications_utils = module.exports = {
       notification: {
         title: title,
         body: message,
-        type: 'viajeAsignado',
-        driverId: driver_id.toString(),
-        tripId: trip_id.toString()
+        data: {
+          type: 'viajeAsignado',
+          driverId: driver_id.toString(),
+          tripId: trip_id.toString()
+        }
       }
     }
     admin.messaging().sendToDevice(device_id, payload)
