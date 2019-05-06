@@ -51,7 +51,7 @@ var trips_dao = module.exports = {
                       notifications_utils.send(firebase_id, "Nuevo viaje disponible!", "Hola! Tenes un nuevo viaje disponible para tomar!", driver_id, trip_id);
                     }
                     else {
-                      console.log("Driver " + next_driver + " does not have firebase id");
+                      console.log("Driver " + driver_id + " does not have firebase id");
                     }
                   });
                 }
