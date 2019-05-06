@@ -46,7 +46,7 @@ var assign_driver_util = module.exports = {
                       }
                       var firebase_id = res.rows[0].firebase_id;
                       if (firebase_id) {
-                        notifications_utils.send(firebase_id, "Nuevo viaje disponible!", "Hola! Tenes un nuevo viaje disponible para tomar!");
+                        notifications_utils.send(firebase_id, "Nuevo viaje disponible!", "Hola! Tenes un nuevo viaje disponible para tomar!", next_driver, trip.id);
                       } else {
                         console.log("The driver " + next_driver + " does not have firebase id to send notification");
                       }
