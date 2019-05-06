@@ -26,7 +26,7 @@ trip_utils.get_drivers_by_score = function(idTrip,sourceTrip,drivers){
 			rating: driver.rating,
 			ring: trip_utils.getRings(distFrom)
 		}
-		driversByScore.push(driverElement);	
+		driversByScore.push(driverElement);
 	});
 	//ordeno por anillos y por rating.
 	driversByScore.sort(function(a, b) {
@@ -43,7 +43,7 @@ trip_utils.get_drivers_by_score = function(idTrip,sourceTrip,drivers){
 
 //calculo de distancias
 trip_utils.distFrom = function(lat1, lng1, lat2, lng2) {
-	console.log("Calculo de desitancia lat1:"+lat1+" lng1:"+lng1+" lat2:"+lat2+" lng2:"+lng2);
+	//console.log("Calculo de desitancia lat1:"+lat1+" lng1:"+lng1+" lat2:"+lat2+" lng2:"+lng2);
     var earthRadius = 6371000; //meters
     var dLat = (lat2 - lat1) * Math.PI / 180;
     var dLng = (lng2 - lng1) * Math.PI / 180;
@@ -52,7 +52,7 @@ trip_utils.distFrom = function(lat1, lng1, lat2, lng2) {
            Math.sin(dLng/2) * Math.sin(dLng/2);
     var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
     var dist =  (earthRadius * c);
-    console.log("Resultado:"+dist);
+    //console.log("Resultado:"+dist);
     return dist;
 }
 

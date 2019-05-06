@@ -1,4 +1,5 @@
-var trips_dao = require('../dao/trips_dao')
+var trips_dao = require('../dao/trips_dao');
+var assign_driver_util = require('../utils/assign_driver_util');
 trips_dao.init();
 
 trips = function(app){
@@ -121,7 +122,7 @@ trips = function(app){
         res.status(404).json({
           errorCode: 2,
           message: "No data found"
-        });     
+        });
       }else{
         res.status(500).json({
           errorCode: 3,
@@ -133,7 +134,7 @@ trips = function(app){
            "code":1,
            "message":err.message
         })
-    }); 
+    });
   });
 
   app.get('/trips/:id/rejects', (req, res, err) => {
@@ -157,6 +158,10 @@ trips = function(app){
            "message":err.message
         })
       });
+  });
+  
+  app.get('/test_assign', (req, res, err) => {
+    assign_driver_util.assign();
   });
 
 }

@@ -1,5 +1,7 @@
 const express = require("express");
 const bodyParser = require('body-parser');
+const cron = require("node-cron");
+var assign_driver_util = require('./src/utils/assign_driver_util')
 
 const app = express();
 
@@ -23,8 +25,13 @@ require('./src/controllers/drivers')(app);
 
 const PORT = process.env.PORT || 5000;
 
+cron.schedule("* * * * *", function() {
+      assign_driver_util.assign();
+});
+
+
 app.listen(PORT, () => {
-  console.log(`server running on port ${PORT}`)
+  console.log(`server running on port ${PORT}`);
 });
 
 
