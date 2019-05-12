@@ -1,10 +1,12 @@
 var admin = require("firebase-admin");
-var serviceAccount = require("../../correapp-76bda-firebase-adminsdk-3n0j7-80c2921b2f.json");
+var serviceAccount = require("../config/firebase-config");
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
   databaseURL: "https://correapp-76bda.firebaseio.com"
 });
+
+console.log(serviceAccount.type)
 
 var notifications_utils = module.exports = {
   send: function(device_id, title, message, driver_id, trip_id) {
