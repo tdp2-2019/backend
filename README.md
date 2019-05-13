@@ -41,26 +41,33 @@ curl -X POST \
   https://correapp-api.herokuapp.com/drivers/ \
   -H 'Content-Type: application/json' \
   -d '{
-    	"dni" : "1234",
-    	"name" : "Gus",
-    	"lastname": "Gimenez",
-    	"email" : "gustavo@gmail.com",
-      "telephone": "123123123",
-      "celphone" : "1534343434",
-      "address" : "Libertador 7200",
-      "brand" : "Ford",
-      "model" : "Fiesta",
-      "licensenumber" : 12312312,
-      "insurancepolicynumber" : "AAADDDSS",
-      "startworktime" : "1555679093",
-      "endworktime" :"1555707893",
-      "carlicenseplate": "ABC123",
-      "carcolour" : "Rojo",
-      "photo_url" : "www.google.com.ar",
-      "signup_date" : "2019-04-10T12:00:00Z",
-      "license_photo_url" : "http://photo.com",
-      "car_plate_photo_url" : "http://foto.com"
-  }'
+    "name": "Gus",
+    "lastname": "Gimenez",
+    "id": 117,
+    "telephone": "123123123",
+    "celphone": "1534343434",
+    "email": "gustavo@gmail.com",
+    "dni": "1234",
+    "brand": "Ford",
+    "model": "Fiesta",
+    "carcolour": "Rojo",
+    "carlicenseplate": "ABC123",
+    "insurancepolicynumber": "AAADDDSS",
+    "startworktime": "13:04:53+00",
+    "endworktime": "21:04:53+00",
+    "address": "Libertador 7200",
+    "licensenumber": "12312312",
+    "currentposition": null,
+    "rating": null,
+    "signup_date": "2019-04-10T12:00:00.000Z",
+    "photo_url": "www.google.com.ar",
+    "license_photo_url": "http://photo.com",
+    "car_plate_photo_url": "http://foto.com",
+    "status": "No confirmado",
+    "firebase_id": "",
+    "active": "S",
+    "comment": "nada para comentar"
+}'
 ```
 
 ### - Get all drivers
