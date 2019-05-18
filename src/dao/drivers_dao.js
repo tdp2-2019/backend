@@ -69,7 +69,7 @@ var drivers_dao = module.exports = {
       var query = "";
       if (Object.keys(querystring).length) {
         var sql = SqlString.format('SELECT * FROM drivers WHERE ?', [querystring]);
-        query = sql.replace(/`/g, "").replace(/,/g, " AND");;
+        query = sql.replace(/`/g, "").replace(/,/g, " AND");
       } else {
         query = 'SELECT * FROM drivers';
       }
