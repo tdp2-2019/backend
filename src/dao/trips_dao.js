@@ -29,9 +29,9 @@ var trips_dao = module.exports = {
       trip.calculate_price(trip.start_time, trip._points, trip._duration);
       return new Promise(function(resolve, reject) {
         connect().
-        query('INSERT INTO trips (source, destination, start_time, pets, status, rejecteds, price, points, duration, client, companion, times_without_driver_answer, timeouts, user_id)' +
-              ' VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14) RETURNING *',
-              [body.source, body.destination, body.start_time, body.pets, 'created', [], price, trip._points, trip._duration, trip.client, body.companion, 0, 0, body.client_id], (err, res) =>{
+        query('INSERT INTO trips (source, destination, start_time, pets, status, rejecteds, price, points, duration, client, companion, times_without_driver_answer, timeouts, user_id,currentposition)' +
+              ' VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15) RETURNING *',
+              [body.source, body.destination, body.start_time, body.pets, 'created', [], price, trip._points, trip._duration, trip.client, body.companion, 0, 0, body.client_id, body.currentposition], (err, res) =>{
           if (err) {
             console.log("Unexpected database error: " + err);
             resolve(null);
@@ -168,6 +168,9 @@ var trips_dao = module.exports = {
         }
         if (body.user_rating) {
           body.user_rating = JSON.stringify(body.user_rating);
+        }
+        if (body.currentposition) {
+          body.currentposition = JSON.stringify(body.currentposition);
         }
         var sql = SqlString.format('UPDATE trips SET ? WHERE id = ?', [body, id]).replace(/\\/g, "");
         sql = sql.replace(/`/g, "") + ' RETURNING *';

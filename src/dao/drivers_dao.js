@@ -30,7 +30,10 @@ var drivers_dao = module.exports = {
   
   update: function(id, body) {
     return new Promise(resolve => {
-      var sql = SqlString.format('UPDATE drivers SET ? WHERE id = ?', [body, id]);
+      if (body.currentposition) {
+          body.currentposition = JSON.stringify(body.currentposition);
+      }
+      var sql = SqlString.format('UPDATE drivers SET ? WHERE id = ?', [body, id]).replace(/\\/g, "");
       sql = sql.replace(/`/g, "") + 'RETURNING *';
       connect().query(sql, (err, res) => {
         if (err) {
