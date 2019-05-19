@@ -62,9 +62,16 @@ var users_dao = module.exports = {
     });
   },
   
-  get_all: function() {
+  get_all: function(querystring) {
     return new Promise(resolve => {
-      connect().query('SELECT * FROM users', (err, res) => {
+      var query = "";
+      if (Object.keys(querystring).length) {
+        var sql = SqlString.format('SELECT * FROM users WHERE ?', [querystring]);
+        query = sql.replace(/`/g, "").replace(/,/g, " AND");;
+      } else {
+        query = 'SELECT * FROM users';
+      }
+      connect().query(query, (err, res) => {
         if (err) {
           console.log("Unexpected database error: " + err);
           resolve(err);
