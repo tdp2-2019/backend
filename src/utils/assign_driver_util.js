@@ -12,7 +12,7 @@ var assign_driver_util = module.exports = {
       if (res.rows && res.rows.length > 0) {
         var trips = res.rows
         trips.forEach(trip => {
-          if (trip.times_without_driver_answer < 5) { //si todavia no pasaron 5 minutos del tiempo que tiene el chofer para contestar...
+          if (trip.times_without_driver_answer < 4) { //si todavia no pasaron 5 minutos del tiempo que tiene el chofer para contestar...
             connect().query('UPDATE trips SET times_without_driver_answer = $1 WHERE id = $2', [trip.times_without_driver_answer + 1, trip.id], (err, res) => {
               if (err) {
                 console.log("Error updating times_without_driver_answer. " + err);
@@ -33,8 +33,8 @@ var assign_driver_util = module.exports = {
                   if (err) {
                     console.log("Error getting the drivers list for trip " + trip.id + " - " + err);
                   }
-                  if (body && trip.timeouts && rejected_trips) {
-                    var next_driver = body[trip.timeouts + rejected_trips].driverId;
+                  if (body && typeof trip.timeouts !== 'undefined' && typeof rejected_trips !== 'undefined') {
+                    var next_driver = body[trip.timeouts + rejected_trips + 1].driverId;
                     connect().query('UPDATE trips SET timeouts = $1, driver_id = $2, times_without_driver_answer = $3 WHERE id = $4', [trip.timeouts + 1, next_driver, 0, trip.id], (err, res) => {
                       if (err) {
                         console.log("Error updating number of timeous in trip " + trip.id + " - " + err);
