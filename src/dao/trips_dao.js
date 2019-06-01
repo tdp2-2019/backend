@@ -42,19 +42,21 @@ var trips_dao = module.exports = {
               var port = process.env.PORT || 5000;
               request('http://localhost:' + port + '/trips/' + trip_id + '/drivers', {json: true}, (err, res, body) => {
                 if (body) {
-                  var driver_id = body[0].driverId;
-                  connect().query('SELECT firebase_id FROM drivers WHERE id = $1', [driver_id], (err, res) => {
-                    if (err) {
-                      console.log("Error getting firebase_id from driver. " + err);
-                    }
-                    var firebase_id = res.rows[0].firebase_id;
-                    if (firebase_id) {
-                      notifications_utils.send(firebase_id, "Nuevo viaje disponible!", "Hola! Tenes un nuevo viaje disponible para tomar!", driver_id, trip_id);
-                    }
-                    else {
-                      console.log("Driver " + driver_id + " does not have firebase id");
-                    }
-                  });
+                  if (typeof body[0] !== 'undefined') {
+                    var driver_id = body[0].driverId;
+                    connect().query('SELECT firebase_id FROM drivers WHERE id = $1', [driver_id], (err, res) => {
+                      if (err) {
+                        console.log("Error getting firebase_id from driver. " + err);
+                      }
+                      var firebase_id = res.rows[0].firebase_id;
+                      if (firebase_id) {
+                        notifications_utils.send(firebase_id, "Nuevo viaje disponible!", "Hola! Tenes un nuevo viaje disponible para tomar!", driver_id, trip_id);
+                      }
+                      else {
+                        console.log("Driver " + driver_id + " does not have firebase id");
+                      }
+                    });
+                  }
                 }
               });
               res.rows[0].current_position = trip_utils.calculate_position(trip.start_time, trip._points, trip._duration);
