@@ -9,10 +9,10 @@ var drivers_dao = module.exports = {
       connect().
       query('INSERT INTO drivers (name, lastname, telephone, celphone, email, dni, address, brand, model, licensenumber, carcolour,' +
        ' carlicenseplate, insurancepolicynumber, startworktime, endworktime, currentposition, signup_date, photo_url, car_plate_photo_url, ' +
-       ' license_photo_url, status, firebase_id,active, comment) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, to_timestamp($14), to_timestamp($15),$16, $17, $18, $19, $20, $21, $22,$23,$24) RETURNING *',
+       ' license_photo_url, status, firebase_id,active, comment, rating) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, to_timestamp($14), to_timestamp($15),$16, $17, $18, $19, $20, $21, $22,$23,$24,$25) RETURNING *',
       [body.name, body.lastname, body.telephone, body.celphone, body.email, body.dni, body.address, body.brand, body.model, body.licensenumber,
         body.carcolour, body.carlicenseplate, body.insurancepolicynumber, body.startworktime, body.endworktime, body.currentPosition,
-        body.signup_date, body.photo_url, body.car_plate_photo_url, body.license_photo_url, 'No confirmado', body.firebase_id, body.active, body.comment], (err, res) => {
+        body.signup_date, body.photo_url, body.car_plate_photo_url, body.license_photo_url, 'No confirmado', body.firebase_id, body.active, body.comment,0], (err, res) => {
         if (err) {
           console.log("Unexpected database erro: " + err);
           resolve(null);
