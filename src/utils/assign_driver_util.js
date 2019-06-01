@@ -40,7 +40,7 @@ var assign_driver_util = module.exports = {
                     if (err) {
                       console.log("Error getting the drivers list for trip " + trip.id + " - " + err);
                     }
-                    if (body && typeof trip.timeouts !== 'undefined' && typeof rejected_trips !== 'undefined') {
+                    if (body && typeof trip.timeouts !== 'undefined' && typeof rejected_trips !== 'undefined' && typeof body[trip.timeouts + rejected_trips + 1] !== 'undefined') {
                       var next_driver = body[trip.timeouts + rejected_trips + 1].driverId;
                       connect().query('UPDATE trips SET timeouts = $1, driver_id = $2, times_without_driver_answer = $3 WHERE id = $4', [trip.timeouts + 1, next_driver, 0, trip.id], (err, res) => {
                         if (err) {
@@ -57,6 +57,13 @@ var assign_driver_util = module.exports = {
                         } else {
                           console.log("The driver " + next_driver + " does not have firebase id to send notification");
                         }
+                      });
+                    } else {
+                      connect().query('UPDATE trips SET status = $1, driver_id = $2 WHERE id = $3', ['Aborted', null, trip.id], (err, res) => {
+                        if (err) {
+                          console.log("Error setting status aborted to trip. " + err);
+                        }
+                        // Mandar notificacion al user avisandole que se aborto el viaje, que pruebe mas tarde.
                       });
                     }
                   });
