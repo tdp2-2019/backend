@@ -229,7 +229,19 @@ var trips_dao = module.exports = {
           resolve(err);
         } else if(res) {
           if (res.rows.length > 0) {
-            resolve(res.rows);
+            var lista = [];
+            var calls =0;
+            res.rows.forEach(trip => {
+
+              this.get_drivers_names(trip.driver_id,trip).then(response => {
+                lista.push(response);
+                calls++;
+                if(calls ===  res.rows.length){
+                    resolve(lista); 
+                }      
+              });
+            });
+        
           } else {
             resolve([]);
           }
@@ -238,6 +250,29 @@ var trips_dao = module.exports = {
     });
   },
   
+  get_drivers_names: function(driver_id,trip){
+    return new Promise(resolve => {
+              if(driver_id != null){
+                drivers_dao.get_all({id:driver_id}).then(driver =>{
+                  if(driver!=null){
+                    trip.driver_name = driver[0].name;
+                    trip.driver_lastname = driver[0].lastname;
+                    resolve(trip);
+                  }else{
+                    trip.driver_name = null;
+                    trip.driver_lastname = null;
+                    resolve(trip);
+                  }
+                });
+              }else{
+                trip.driver_name = null;
+                trip.driver_lastname = null;
+                resolve(trip);
+              }
+        });
+    },
+
+
   get_waypoints: function(source_lat, source_long, destination_lat, destination_long) {
     return new Promise(resolve => {
       var origin = source_lat + ',' + source_long;
