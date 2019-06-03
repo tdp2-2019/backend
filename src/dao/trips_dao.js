@@ -204,7 +204,9 @@ var trips_dao = module.exports = {
         } else if (res) {
           if (res.rows.length > 0){
             res.rows[0].current_position = trip_utils.calculate_position(res.rows[0].start_time, res.rows[0].points, res.rows[0].duration)
-            resolve(res.rows[0]);
+            this.get_drivers_names(res.rows[0].driver_id,res.rows[0]).then(response => {
+              resolve(response);
+            });
           } else {
             resolve(null);
           }
