@@ -90,14 +90,18 @@ curl -X POST \
   https://correapp-api.herokuapp.com/users \
   -H 'Content-Type: application/json' \
   -d '{
-    	"name": "Lucas",
-    	"lastname" : "Pratto",
-    	"dni" : "28999999",
-    	"telephone" : "313131313",
-    	"celphone" : "1531313131",
-    	"email" : "lucas.pratto@gmail.com",
-    	"address" : "Jorge Newbery 1764 5to D"
-    }'
+        "name": "Lucas",
+        "lastname" : "Pratto",
+        "dni" : "28999999",
+        "telephone" : "313131313",
+        "celphone" : "1531313131",
+        "email" : "lucas.pratto@gmail.com",
+        "address" : "Jorge Newbery 1764 5to D",
+        "firebase_id":"aaa2211",
+        "status":"Confirmado",
+        "comment":"Es bueno",
+        "photo_url":"www.google.com.ar"
+}'
 ```
 
 
