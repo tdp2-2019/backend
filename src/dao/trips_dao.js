@@ -3,9 +3,11 @@ var polyUtil = require('polyline-encoded');
 var SqlString = require('sqlstring');
 var rating_calculator = require('../utils/rating_calculator');
 var util = require('util');
-var drivers_dao = require('../dao/drivers_dao');
 var tripRates;
 var notifications_utils = require('../utils/notifications_utils');
+var drivers_dao = require('./drivers_dao');
+var users_dao = require('./users_dao');
+
 const request = require('request');
 const connect = require('../utils/database');
 const trip_utils =require('../utils/trip_utils');
@@ -131,13 +133,13 @@ var trips_dao = module.exports = {
             resolve(err);
           }
           if (res_trip.rowCount != 0) {
-            var driver_id = (rejection !== undefined )? rejection.driver_id : res_trip.rows[0].driver_id;
+            var driver_id = (rejection !== undefined)? rejection.driver_id : res_trip.rows[0].driver_id;
             connect().query('SELECT * FROM trips WHERE driver_id = $1', [driver_id], (err, driver_trips) => {
               if (err) {
                 console.log("Unexpected error in calculate driver rating. " + err);
                 resolve(err);
               }
-              if(driver_trips) {
+              if (driver_trips) {
                 connect().query('SELECT * FROM rejected_trips WHERE driver_id = $1', [driver_id], (err, driver_rejected) => {
                   if (err) {
                     console.log("Unexpected error in calculate driver rating. " + err);
@@ -164,25 +166,34 @@ var trips_dao = module.exports = {
         });
       }
       delete body.rejection;
+      var update_driver_rating = false;
+      var update_user_rating = false;
       if (Object.keys(body).length) {
         if (body.driver_rating) {
           body.driver_rating = JSON.stringify(body.driver_rating);
+          update_driver_rating = true;
         }
         if (body.user_rating) {
           body.user_rating = JSON.stringify(body.user_rating);
+          update_user_rating = true;
         }
         if (body.currentposition) {
           body.currentposition = JSON.stringify(body.currentposition);
         }
         var sql = SqlString.format('UPDATE trips SET ? WHERE id = ?', [body, id]).replace(/\\/g, "");
         sql = sql.replace(/`/g, "") + ' RETURNING *';
-        console.log(sql)
         connect().query(sql, (err, res) => {
           if (err) {
             console.log("Unexpected database error: " + err);
             resolve(err);
           } else if (res) {
             if (res.rows.length > 0){
+              if (update_user_rating && res.rows[0].user_id) {
+                users_dao.update_rating(res.rows[0].user_id);
+              }
+              if (update_driver_rating) {
+                drivers_dao.update_rating(res.rows[0].driver_id);
+              }
               resolve(res.rows[0]);
             } else {
               resolve(null);
@@ -224,7 +235,7 @@ var trips_dao = module.exports = {
       } else {
         query = 'SELECT * FROM trips';
       }
-      console.log(query)
+      console.log(query);
       connect().query(query, (err, res) => {
         if (err) {
           console.log("Unexpected database error: " + err);
@@ -232,26 +243,25 @@ var trips_dao = module.exports = {
         } else if(res) {
           if (res.rows.length > 0) {
             var lista = [];
-            var calls =0;
+            var calls = 0;
             res.rows.forEach(trip => {
 
               this.get_drivers_names(trip.driver_id,trip).then(response => {
                 lista.push(response);
                 calls++;
                 if(calls ===  res.rows.length){
-                    resolve(lista); 
-                }      
+                    resolve(lista);
+                }
               });
             });
-        
-          } else {
+        } else {
             resolve([]);
           }
         }
       });
     });
   },
-  
+
   get_drivers_names: function(driver_id,trip){
     return new Promise(resolve => {
               if(driver_id != null){
@@ -378,7 +388,7 @@ var trips_dao = module.exports = {
                           nighttimeend: '06:00:00',
                           nighttimestart: '18:00:00',
                           nightrate: '50',
-                          idzona: 1 
+                          idzona: 1
                         };
           }
         }
