@@ -6,7 +6,7 @@ var driver_intervals =[
   {factor: 2, min: 150, max: Infinity},
 ]
 
-var user_intervals =[
+var user_intervals = [
   {factor: 1.3, min: 1, max: 3},
   {factor: 1.4, min: 4, max: 6},
   {factor: 1.6, min: 7, max: 9},
@@ -17,32 +17,41 @@ var user_intervals =[
 var driver_penalty = 3;
 
 var rating_calculator = module.exports = {
-    
+
     driver_rating: function(trips, number_of_rejected_trips) {
-      return this.rating(trips, driver_intervals, number_of_rejected_trips);
-    },
-    
-    user_rating: function(trips) {
-      return this.rating(trips, user_intervals, 0);
-    },
-    
-    rating: function(trips, intervals, number_of_rejected_trips) {
       return new Promise(resolve => {
         if ((trips == null || trips.length == 0) && number_of_rejected_trips == 0) resolve(null);
         var number_of_trips = trips.length + number_of_rejected_trips;
         var total_score = driver_penalty * number_of_rejected_trips;
-        trips.forEach(trip =>{
+        trips.forEach(trip => {
           if (trip.driver_rating && trip.driver_rating.rating) {
             total_score += trip.driver_rating.rating;
           }
         });
         total_score = total_score / number_of_trips;
-        resolve(this.factor(intervals, number_of_trips).then(factor =>{
+        resolve(this.factor(driver_intervals, number_of_trips).then(factor =>{
           return factor * total_score;
         }));
       });
     },
-    
+
+    user_rating: function(trips) {
+      return new Promise(resolve => {
+        if (trips == null || trips.length == 0) resolve(null);
+        var number_of_trips = trips.length;
+        var total_score = 0;
+        trips.forEach(trip => {
+          if (trip.user_rating && trip.user_rating.rating) {
+            total_score += trip.user_rating.rating;
+          }
+        });
+        total_score = total_score / number_of_trips;
+        resolve(this.factor(user_intervals, number_of_trips).then(factor =>{
+          return factor * total_score;
+        }));
+      });
+    },
+
     factor: function(intervals, number_of_trips) {
       return new Promise(resolve => {
         var factor = 1;

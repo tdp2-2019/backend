@@ -1,7 +1,7 @@
 User = require('../models/user')
 const connect = require('../utils/database');
 var SqlString = require('sqlstring');
-
+var rating_calculator = require('../utils/rating_calculator');
 var users = [];
 
 var users_dao = module.exports = {
@@ -25,7 +25,7 @@ var users_dao = module.exports = {
       });
     });
   },
-   
+
   update: function(id, body) {
     return new Promise(resolve => {
       var sql = SqlString.format('UPDATE users SET ? WHERE id = ?', [body, id]);
@@ -44,7 +44,7 @@ var users_dao = module.exports = {
       });
     });
   },
-  
+
   get: function(id) {
     return new Promise(resolve => {
       connect().query('SELECT * FROM users WHERE id = $1', [id], (err, res) => {
@@ -52,7 +52,7 @@ var users_dao = module.exports = {
           console.log("Unexpected database error: " + err);
           resolve(err);
         } else if (res) {
-          if (res.rows.length > 0){
+          if (res.rows.length > 0) {
             resolve(res.rows[0]);
           } else {
             resolve(null);
@@ -61,7 +61,7 @@ var users_dao = module.exports = {
       });
     });
   },
-  
+
   get_all: function(querystring) {
     return new Promise(resolve => {
       var query = "";
@@ -102,4 +102,24 @@ var users_dao = module.exports = {
       });
     });
   },
+  
+  update_rating: function(user_id) {
+    connect().query('SELECT * FROM trips where user_id = $1', [user_id], (err, res) => {
+      if (err) {
+        console.log("Unexpected error getting trips: " + err);
+        return err;
+      }
+      var trips = res.rows;
+      rating_calculator.user_rating(trips).then(rating => {
+        connect().query('UPDATE users SET rating = $1 where id = $2', [rating, user_id], (err, res) => {
+          if (err) {
+            console.log('Unexpected error updating user rating. ' + err);
+            return err;
+          } else {
+            console.log('User rating updated');
+          }
+        });
+      });
+    });
+  }
 }
