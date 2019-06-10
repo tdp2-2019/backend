@@ -12,8 +12,9 @@ var notifications_utils = module.exports = {
   send: function(device_id, title, message, driver_id, trip_id) {
     var payload = {
       notification: {
+        click_action: ".activities.ChoferViewTripActivity",
         title: title,
-        body: message,
+        body: message        
       },
       data: {
         type: 'viajeAsignado',

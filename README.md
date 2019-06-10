@@ -7,19 +7,13 @@ https://correapp-api.herokuapp.com
 curl -X POST \
   https://correapp-api.herokuapp.com/trips \
   -H 'Content-Type: application/json' \
-  -d '{
-	"client" : "Gus",
-	"source" : {
-		"lat" : "-34.567448",
-		"long" : "-58.435109"
-	},
-	"destination" : {
-		"lat" : "-34.526351",
-		"long" : "-58.471460"
-	},
-	"start_time" : "2019-04-10T12:00:00Z",
-	"pets" : [{"key1": "value", "key2":"value"}, {"key1": "value", "key2":"value"}],
-  "companion" : "false"
+  -d '{"client":"Juan Patricioooooooooo",
+"client_id":4,
+"companion":false,
+"destination":{"long":"-58.3815704","lat":"-34.603738899999996","name":"C1043 Buenos Aires, Argentina"},
+"pets":[{"key1":"alfred anda?","key2":"Pajaro Chico"}],
+"source":{"long":"-58.4541584","lat":"-34.5688795","name":"Moldes 1423, C1426ALQ CABA, Argentina"},
+"start_time":"Sun Jun 09 23:32:52 GMT-03:00 2019"
 }'
 ```
 
@@ -90,14 +84,18 @@ curl -X POST \
   https://correapp-api.herokuapp.com/users \
   -H 'Content-Type: application/json' \
   -d '{
-    	"name": "Lucas",
-    	"lastname" : "Pratto",
-    	"dni" : "28999999",
-    	"telephone" : "313131313",
-    	"celphone" : "1531313131",
-    	"email" : "lucas.pratto@gmail.com",
-    	"address" : "Jorge Newbery 1764 5to D"
-    }'
+        "name": "Lucas",
+        "lastname" : "Pratto",
+        "dni" : "28999999",
+        "telephone" : "313131313",
+        "celphone" : "1531313131",
+        "email" : "lucas.pratto@gmail.com",
+        "address" : "Jorge Newbery 1764 5to D",
+        "firebase_id":"aaa2211",
+        "status":"Confirmado",
+        "comment":"Es bueno",
+        "photo_url":"www.google.com.ar"
+}'
 ```
 
 
